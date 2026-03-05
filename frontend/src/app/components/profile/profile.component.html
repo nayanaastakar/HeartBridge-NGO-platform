@@ -1,0 +1,113 @@
+<div class="profile-page-wrapper">
+  <div class="profile-content-area">
+
+    <!-- Lean Header -->
+    <header class="minimal-header">
+      <div class="title-wrap">
+        <h1>Profile Settings</h1>
+        <p>Manage your account details and preferences</p>
+      </div>
+      <div class="header-actions">
+        <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="loading || profileForm.invalid">
+          <mat-spinner diameter="20" *ngIf="loading" color="accent" class="inline-spinner"></mat-spinner>
+          <mat-icon *ngIf="!loading">check</mat-icon>
+          Update Profile
+        </button>
+      </div>
+    </header>
+
+    <div class="profile-layout-grid">
+
+      <!-- Left Column: Visuals & Info -->
+      <aside class="info-sidebar">
+        <div class="user-main-card">
+          <div class="avatar-edit-box" (click)="fileInput.click()">
+            <img [src]="previewImage || 'assets/default-avatar.png'" alt="User Photo"
+              onerror="this.src='https://ui-avatars.com/api/?name=' + (currentUser?.name || 'User') + '&background=f1f5f9&color=64748b&size=256'">
+            <div class="edit-btn-mini">
+              <mat-icon>edit</mat-icon>
+            </div>
+            <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+          </div>
+          <div class="user-identity">
+            <h2>{{ currentUser?.name }}</h2>
+            <span class="user-email">{{ currentUser?.email }}</span>
+            <div class="role-badge" [attr.data-role]="currentUser?.role">
+              {{ currentUser?.role | titlecase }}
+            </div>
+          </div>
+
+          <div class="account-meta">
+            <div class="meta-item">
+              <mat-icon>event</mat-icon>
+              <span>Joined {{ (currentUser?.createdAt | date:'mediumDate') || 'Recently' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- NGO Quick Card (If NGO Admin) -->
+        <div class="ngo-sidebar-card" *ngIf="currentUser?.role === 'ngo_admin' && ngo">
+          <div class="card-label">Managed NGO</div>
+          <div class="ngo-item-mini">
+            <img [src]="ngo?.logo" *ngIf="ngo?.logo"
+              onerror="this.src='https://ui-avatars.com/api/?name=NGO&background=f1f5f9&color=64748b'">
+            <div class="ngo-item-details">
+              <strong>{{ ngo?.name }}</strong>
+              <span class="v-status" [class.verified]="ngo?.isVerified">
+                {{ ngo?.isVerified ? 'Verified Organization' : 'Pending Verification' }}
+              </span>
+            </div>
+            <button mat-icon-button routerLink="/ngo-dashboard" matTooltip="Open Dashboard">
+              <mat-icon>open_in_new</mat-icon>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Column: Forms -->
+      <main class="settings-main">
+        <mat-card class="form-card">
+          <form [formGroup]="profileForm" class="clean-form">
+
+            <section class="form-section">
+              <h3 class="section-title">Public Information</h3>
+              <div class="form-row">
+                <mat-form-field appearance="fill">
+                  <mat-label>Display Name</mat-label>
+                  <input matInput formControlName="name">
+                </mat-form-field>
+              </div>
+              <div class="form-row">
+                <mat-form-field appearance="fill">
+                  <mat-label>About / Bio</mat-label>
+                  <textarea matInput formControlName="bio" rows="3"
+                    placeholder="I support children's education in rural India..."></textarea>
+                </mat-form-field>
+              </div>
+            </section>
+
+            <mat-divider></mat-divider>
+
+            <section class="form-section">
+              <h3 class="section-title">Contact Details</h3>
+              <div class="form-grid">
+                <mat-form-field appearance="fill">
+                  <mat-label>Phone Number</mat-label>
+                  <mat-icon matPrefix>phone</mat-icon>
+                  <input matInput formControlName="phone">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>Location</mat-label>
+                  <mat-icon matPrefix>place</mat-icon>
+                  <input matInput formControlName="address">
+                </mat-form-field>
+              </div>
+            </section>
+
+          </form>
+        </mat-card>
+      </main>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,141 @@
+<div class="story-detail-container">
+  <div class="detail-header">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Impact Story Details</h1>
+    <div class="spacer"></div>
+  </div>
+
+  <mat-spinner *ngIf="loading" diameter="50" class="centered-spinner"></mat-spinner>
+
+  <div *ngIf="!loading && story" class="story-detail">
+    <mat-card class="detail-card">
+      <!-- Full Width Image with Toggle -->
+      <div class="full-image-section">
+        <img [src]="getStoryImage()" [alt]="isBeforeShowing ? 'Before' : 'After'" class="full-image"
+          (error)="onImageError($event)">
+        <div class="image-overlay">
+          <div class="label">{{ isBeforeShowing ? 'BEFORE' : 'AFTER' }}</div>
+          <button mat-fab color="accent" (click)="toggleBeforeAfter()" class="toggle-fab">
+            <mat-icon>swapHoriz</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <mat-card-content class="detail-content">
+        <!-- NGO Info -->
+        <div class="ngo-header" *ngIf="story.ngoId">
+          <div class="ngo-badge">
+            <img *ngIf="story.ngoId.logo" [src]="story.ngoId.logo" [alt]="story.ngoId.name" class="ngo-logo"
+              (error)="onImageError($event)">
+            <div class="ngo-info">
+              <h3>{{ story.ngoId.name }}</h3>
+              <p>{{ story.ngoId.description }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story Title & Problem -->
+        <h2 class="story-title">{{ story.title }}</h2>
+
+        <div class="story-sections">
+          <div class="section">
+            <h3><mat-icon>warning</mat-icon> The Problem</h3>
+            <p>{{ story.problemStatement }}</p>
+          </div>
+
+          <div class="section">
+            <h3><mat-icon>check_circle</mat-icon> Our Solution</h3>
+            <p>{{ story.solutionDescription }}</p>
+          </div>
+
+          <!-- Impact Metrics -->
+          <div class="section metrics-section">
+            <h3><mat-icon>trending_up</mat-icon> Impact Achieved</h3>
+            <div class="metrics-grid">
+              <div class="metric-card">
+                <mat-icon>people</mat-icon>
+                <div>
+                  <div class="metric-value">{{ story.impact?.beneficiariesReached }}+</div>
+                  <div class="metric-label">Beneficiaries Reached</div>
+                </div>
+              </div>
+              <div class="metric-card">
+                <mat-icon>attach_money</mat-icon>
+                <div>
+                  <div class="metric-value">₹{{ story.fundingDetails?.amountRaised | number }}</div>
+                  <div class="metric-label">Amount Raised</div>
+                </div>
+              </div>
+              <div class="metric-card">
+                <mat-icon>group</mat-icon>
+                <div>
+                  <div class="metric-value">{{ story.fundingDetails?.donorCount }}</div>
+                  <div class="metric-label">Donors Contributed</div>
+                </div>
+              </div>
+              <div class="metric-card">
+                <mat-icon>schedule</mat-icon>
+                <div>
+                  <div class="metric-value">{{ formatDuration(story.impact?.implementationTimeline?.durationMonths) }}
+                  </div>
+                  <div class="metric-label">Implementation Time</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Services Provided -->
+          <div class="section" *ngIf="story.impact?.servicesProvided?.length">
+            <h3><mat-icon>list</mat-icon> Services Provided</h3>
+            <div class="services-list">
+              <span class="service-chip" *ngFor="let service of story.impact.servicesProvided">
+                {{ service }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Engagement Stats -->
+          <div class="section engagement-section">
+            <h3><mat-icon>favorite</mat-icon> Engagement</h3>
+            <div class="engagement-stats-detail">
+              <div class="stat">
+                <mat-icon>visibility</mat-icon>
+                <span>{{ story.engagement?.views || 0 }} Views</span>
+              </div>
+              <div class="stat">
+                <mat-icon>favorite</mat-icon>
+                <span>{{ story.engagement?.likes?.length || 0 }} Likes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <!-- Actions -->
+      <mat-card-actions class="detail-actions">
+        <button mat-raised-button (click)="likeStory()" [color]="isLiked ? 'warn' : ''">
+          <mat-icon>{{ isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
+          {{ isLiked ? 'Liked' : 'Like' }}
+        </button>
+        <button mat-raised-button (click)="shareStory()">
+          <mat-icon>share</mat-icon>
+          Share
+        </button>
+        <button mat-raised-button color="primary" (click)="goBack()">
+          <mat-icon>arrow_forward</mat-icon>
+          Back to Stories
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!loading && !story" class="no-story">
+    <mat-icon>error_outline</mat-icon>
+    <h2>Story Not Found</h2>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      Back to Impact Stories
+    </button>
+  </div>
+</div>

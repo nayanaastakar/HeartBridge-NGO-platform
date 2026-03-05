@@ -1,0 +1,127 @@
+<div class="impact-stories-container">
+  <div class="stories-header">
+    <h1>Impact Stories</h1>
+    <p class="subtitle">See how donations create real change in communities</p>
+  </div>
+
+
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading impact stories...</p>
+  </div>
+
+  <!-- Stories Grid -->
+  <div *ngIf="!loading && stories.length > 0" class="stories-grid">
+    <mat-card *ngFor="let story of stories" class="story-card" (click)="openStoryDetail(story._id)">
+
+      <!-- Before/After Image Slider -->
+      <div class="image-slider">
+        <div class="slider-container">
+          <img [src]="getStoryImage(story)" [alt]="isBeforeShowing(story._id) ? 'Before' : 'After'" class="story-image"
+            (error)="onImageError($event)">
+          <div class="slider-label">{{ isBeforeShowing(story._id) ? 'BEFORE' : 'AFTER' }}</div>
+        </div>
+        <button mat-icon-button class="toggle-btn" (click)="toggleBeforeAfter($event, story._id)">
+          <mat-icon>swapHoriz</mat-icon>
+        </button>
+      </div>
+
+      <!-- Story Content -->
+      <mat-card-content>
+        <!-- NGO Badge -->
+        <div class="ngo-badge">
+          <img *ngIf="story.ngoId.logo" [src]="ngoService.getFullImageUrl(story.ngoId.logo)" [alt]="story.ngoId.name"
+            class="ngo-logo" (error)="onImageError($event, story.ngoId.category)">
+          <span class="ngo-name">{{ story.ngoId.name }}</span>
+        </div>
+
+        <!-- Title & Problem -->
+        <h2 class="story-title">{{ story.title }}</h2>
+        <p class="story-problem">{{ story.problemStatement }}</p>
+
+        <!-- Funding Progress -->
+        <div class="funding-info">
+          <div class="funding-amount">
+            <span class="label">Amount Raised</span>
+            <span class="amount">₹{{ story.fundingDetails.amountRaised | number }}</span>
+          </div>
+          <mat-progress-bar class="funding-bar"
+            [value]="(story.fundingDetails.amountRaised / story.fundingDetails.amountRequired) * 100" color="accent">
+          </mat-progress-bar>
+          <div class="funding-stats">
+            <span>{{ story.fundingDetails.donorCount }} donors</span>
+            <span>•</span>
+            <span>{{ formatDate(story.publishedAt) }}</span>
+          </div>
+        </div>
+
+        <!-- Impact Metrics -->
+        <div class="impact-metrics">
+          <div class="metric">
+            <mat-icon>people</mat-icon>
+            <div>
+              <span class="metric-value">{{ story.impact.beneficiariesReached }}+</span>
+              <span class="metric-label">Beneficiaries</span>
+            </div>
+          </div>
+          <div class="metric">
+            <mat-icon>location_on</mat-icon>
+            <div>
+              <span class="metric-value">{{ story.fundingDetails.donorCount }}</span>
+              <span class="metric-label">Donors Helped</span>
+            </div>
+          </div>
+          <div class="metric">
+            <mat-icon>check_circle</mat-icon>
+            <div>
+              <span class="metric-value">{{ story.impact.implementationTimeline.durationMonths }}mo</span>
+              <span class="metric-label">Implementation</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services Provided -->
+        <div class="services">
+          <div class="service-tags">
+            <span class="service-tag" *ngFor="let service of story.impact.servicesProvided">
+              {{ service }}
+            </span>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <!-- Story Actions -->
+      <mat-card-actions>
+        <div class="engagement-stats">
+          <span class="stat"><mat-icon>visibility</mat-icon> {{ story.engagement.views || 0 }}</span>
+          <span class="stat"><mat-icon>favorite</mat-icon> {{ story.engagement.likes.length || 0 }}</span>
+        </div>
+        <span class="spacer"></span>
+        <button mat-button color="primary" (click)="openStoryDetail($event, story._id)">
+          <mat-icon>info</mat-icon> Read Full Story
+        </button>
+        <button mat-icon-button matTooltip="Like this story" (click)="likeStory($event, story._id)">
+          <mat-icon [color]="isLiked(story._id) ? 'warn' : ''">{{ isLiked(story._id) ? 'favorite' : 'favorite_border'
+            }}</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Share this story" (click)="shareStory($event, story._id)">
+          <mat-icon>share</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- No Stories Message -->
+  <div *ngIf="!loading && stories.length === 0" class="no-stories">
+    <mat-icon>story</mat-icon>
+    <h2>No Impact Stories Yet</h2>
+    <p>Check back soon for inspiring stories of change!</p>
+  </div>
+
+  <!-- Pagination -->
+  <mat-paginator *ngIf="stories.length > 0" [length]="totalStories" [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)" class="pagination">
+  </mat-paginator>
+</div>

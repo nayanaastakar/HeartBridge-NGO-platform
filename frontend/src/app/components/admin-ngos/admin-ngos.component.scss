@@ -1,0 +1,273 @@
+@import "../../../styles.scss";
+
+.admin-ngos-container {
+  padding: 40px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: 2.75rem;
+    font-weight: 800;
+    margin-bottom: 32px;
+    color: var(--text-primary);
+    letter-spacing: -0.04em;
+    position: relative;
+    display: inline-block;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+  }
+
+  .actions {
+    margin-bottom: 40px;
+    display: flex;
+    gap: 16px;
+
+    button {
+      padding: 0 28px;
+      height: 48px;
+      font-weight: 700;
+      border-radius: 14px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: -0.01em;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+      }
+    }
+  }
+
+  .ngos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 32px;
+  }
+
+  .ngo-card {
+    border-radius: 24px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    background: white;
+    box-shadow: var(--shadow-sm);
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
+    }
+
+    mat-card-header {
+      padding: 24px;
+      background: var(--bg-main);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .header-main {
+        flex: 1;
+      }
+
+      mat-card-title {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+        letter-spacing: -0.02em;
+      }
+
+      mat-card-subtitle {
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .verification-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        background: var(--pastel-slate);
+        color: var(--text-tertiary);
+
+        mat-icon {
+          font-size: 18px;
+          color: inherit;
+        }
+
+        &.verified {
+          background: var(--pastel-emerald);
+          color: #059669;
+        }
+      }
+    }
+
+    mat-card-content {
+      padding: 24px;
+
+      p.description {
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin-bottom: 24px;
+        font-size: 1rem;
+      }
+
+      .ngo-details {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: var(--bg-main);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid var(--border-light);
+
+        p {
+          margin: 0;
+          font-size: 0.95rem;
+          color: var(--text-primary);
+          display: flex;
+          justify-content: space-between;
+
+          strong {
+            color: var(--text-tertiary);
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+    &.theme-child mat-card-header {
+      background: linear-gradient(135deg, #fff1f2 0%, #fdf2f8 100%);
+
+      .mat-card-subtitle {
+        color: #e11d48;
+      }
+    }
+
+    &.theme-senior mat-card-header {
+      background: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 100%);
+
+      .mat-card-subtitle {
+        color: #6d28d9;
+      }
+    }
+
+    &.theme-food mat-card-header {
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+
+      .mat-card-subtitle {
+        color: #ea580c;
+      }
+    }
+
+    &.theme-health mat-card-header {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+
+      .mat-card-subtitle {
+        color: #16a34a;
+      }
+    }
+
+    &.theme-ability mat-card-header {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+
+      .mat-card-subtitle {
+        color: #0284c7;
+      }
+    }
+
+    &.theme-animal mat-card-header {
+      background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
+
+      .mat-card-subtitle {
+        color: #a21caf;
+      }
+    }
+
+    &.theme-edu mat-card-header {
+      background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+
+      .mat-card-subtitle {
+        color: #ca8a04;
+      }
+    }
+
+    &.theme-default mat-card-header {
+      background: var(--bg-main);
+
+      .mat-card-subtitle {
+        color: var(--primary);
+      }
+    }
+
+    mat-card-actions {
+      padding: 8px 20px 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      button {
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0 16px;
+        height: 38px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: var(--bg-main);
+        }
+
+        mat-icon {
+          font-size: 18px;
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px;
+    color: var(--text-tertiary);
+
+    p {
+      margin-top: 16px;
+      font-weight: 600;
+    }
+  }
+
+  .no-ngos {
+    text-align: center;
+    padding: 80px;
+    color: var(--text-tertiary);
+    background: var(--bg-main);
+    border-radius: 24px;
+    border: 3px dashed var(--border-light);
+
+    p {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+}

@@ -1,0 +1,319 @@
+/* Modern Clean Donor Dashboard */
+.dashboard-container {
+  padding: 40px;
+  background-color: var(--bg-main);
+  min-height: 100vh;
+  font-family: var(--font-body);
+}
+
+.welcome-banner {
+  padding: 60px 48px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 32px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
+    z-index: 1;
+  }
+
+  .welcome-text-group {
+    position: relative;
+    z-index: 2;
+  }
+
+  h1 {
+    font-size: 2.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 12px 0;
+    letter-spacing: -0.04em;
+    font-family: var(--font-heading);
+  }
+
+  .welcome-subtitle {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .badge-display {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    &.badge-gold {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e;
+      border-color: #fbd38d;
+    }
+
+    &.badge-silver {
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      color: #475569;
+      border-color: #cbd5e1;
+    }
+
+    &.badge-bronze {
+      background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
+      color: #9a3412;
+      border-color: #fdba74;
+    }
+  }
+}
+
+.impact-points-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.impact-level-card h2 {
+  color: #8b5cf6 !important;
+  /* Soft Purple */
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    font-family: var(--font-heading);
+  }
+
+  button {
+    color: var(--text-secondary);
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  margin-bottom: 48px;
+
+  mat-card {
+    padding: 32px;
+    border-radius: 24px;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-light);
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      border-color: var(--primary-light);
+    }
+
+    mat-card-title {
+      color: var(--text-tertiary);
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    mat-card-content {
+      h2 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        margin: 0;
+        letter-spacing: -0.04em;
+        line-height: 1;
+      }
+
+      p {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 8px;
+        opacity: 0.8;
+      }
+    }
+
+    &:nth-child(1) h2 {
+      color: var(--primary);
+    }
+
+    &:nth-child(2) h2 {
+      color: var(--accent);
+    }
+
+    &:nth-child(3) h2 {
+      color: var(--teal);
+    }
+  }
+}
+
+.recent-donations {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  border: none;
+  padding: 0;
+  overflow: hidden;
+  margin-top: 40px;
+
+  mat-card-header {
+    padding: 24px 32px;
+    background: #ffffff;
+    border-bottom: 1px solid #f1f5f9;
+
+    mat-card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      mat-icon {
+        color: #f59e0b;
+      }
+    }
+  }
+
+  mat-list {
+    padding: 8px 0;
+  }
+
+  mat-list-item {
+    height: auto !important;
+    padding: 16px 32px;
+    border-bottom: 1px solid #f8fafc;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #fafafa;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    mat-icon {
+      color: #ec4899;
+      background: #fdf2f8;
+      padding: 10px;
+      border-radius: 14px;
+      margin-right: 20px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    [matListItemTitle] {
+      font-weight: 700;
+      color: #1e293b;
+      font-size: 1.05rem;
+    }
+
+    [matListItemLine] {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-top: 2px;
+    }
+  }
+}
+
+.actions {
+  margin-top: 40px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  button {
+    height: 52px;
+    padding: 0 32px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    &[color="primary"] {
+      background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+    }
+
+    &[color="accent"] {
+      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+    }
+
+    &.history-btn {
+      background: linear-gradient(135deg, #0d9488 0%, #10b981 100%);
+      color: white;
+    }
+
+    &.locked-btn {
+      background-color: #e2e8f0;
+      color: #94a3b8;
+      cursor: not-allowed;
+      border: 1px dashed #cbd5e1;
+      box-shadow: none;
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      mat-icon {
+        color: #94a3b8;
+      }
+    }
+  }
+}

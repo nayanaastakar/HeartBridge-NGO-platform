@@ -1,0 +1,69 @@
+<div class="admin-login-container">
+    <div class="admin-layout">
+        <!-- Left Panel: Security Info -->
+        <div class="security-panel">
+            <div class="security-visual">
+                <div class="glow-sphere"></div>
+                <mat-icon class="shield-icon">security</mat-icon>
+            </div>
+            <div class="security-content">
+                <div class="brand-top">
+                    <mat-icon class="brand-icon">admin_panel_settings</mat-icon>
+                    <span class="brand-name">ADMIN CONSOLE</span>
+                </div>
+                <div class="badge neon-text">Administrative Access</div>
+                <h1>Administrator <span class="accent">Login</span></h1>
+                <p>Access the platform management console. Secure your credentials at all times.</p>
+
+            </div>
+        </div>
+
+        <!-- Right Panel: Login Form -->
+        <div class="login-panel">
+            <div class="login-card-wrapper fade-in-right">
+                <div class="admin-logo-badge">
+                    <mat-icon>manage_accounts</mat-icon>
+                </div>
+
+                <div class="form-header">
+                    <h2>Terminal Login</h2>
+                    <p>Enter your credentials to manage the platform</p>
+                </div>
+
+                <form [formGroup]="adminLoginForm" (ngSubmit)="onSubmit()" class="admin-form">
+                    <div class="input-wrapper">
+                        <label>Administrative Email</label>
+                        <div class="input-field">
+                            <input type="email" id="admin-login-email" name="admin_email" formControlName="email"
+                                placeholder="admin@heartbridge.com" autocomplete="email" required>
+                            <mat-icon>verified_user</mat-icon>
+                        </div>
+                    </div>
+
+                    <div class="input-wrapper">
+                        <label>Access Key / Password</label>
+                        <div class="input-field">
+                            <input [type]="showPassword ? 'text' : 'password'" id="admin-login-password"
+                                name="admin_password" formControlName="password" placeholder="••••••••"
+                                autocomplete="current-password" required>
+                            <mat-icon>key</mat-icon>
+                        </div>
+                    </div>
+
+                    <button mat-raised-button type="submit" class="authorize-btn"
+                        [disabled]="adminLoginForm.invalid || loading">
+                        <span *ngIf="!loading">SIGN IN TO CONSOLE</span>
+                        <mat-spinner diameter="24" *ngIf="loading"></mat-spinner>
+                    </button>
+                </form>
+
+
+                <div class="portal-footer">
+                    <a routerLink="/login">Public Portal</a>
+                    <div class="sep"></div>
+                    <a routerLink="/admin-register">Register New Admin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

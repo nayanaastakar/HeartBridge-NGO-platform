@@ -1,0 +1,242 @@
+<div class="emergency-funds-container">
+  <div class="page-header">
+    <h1>Emergency Funds</h1>
+    <p class="subtitle">Urgent needs requiring immediate support</p>
+  </div>
+
+  <div *ngIf="isNGOAdmin" class="ngo-admin-section">
+    <button mat-raised-button color="accent" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Cancel' : 'Create Emergency Fund' }}
+    </button>
+
+    <mat-card *ngIf="showCreateForm" class="create-form-card">
+      <mat-card-header>
+        <mat-card-title>{{ editingFund ? 'Edit Emergency Fund' : 'Create an Emergency Fund' }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="createForm" (ngSubmit)="submitEmergencyFund()">
+          <mat-form-field appearance="fill">
+            <mat-label>Fund Title</mat-label>
+            <input matInput formControlName="title" placeholder="e.g., Flood Relief Support">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="4"
+              placeholder="Describe the emergency situation"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Emergency Type</mat-label>
+            <mat-select formControlName="emergencyType">
+              <mat-option *ngFor="let type of emergencyTypes" [value]="type">
+                {{ type }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Priority Level</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option value="high">High</mat-option>
+              <mat-option value="medium">Medium</mat-option>
+              <mat-option value="low">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Required Amount (₹)</mat-label>
+            <input matInput formControlName="requiredAmount" type="number" placeholder="Amount needed">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Deadline</mat-label>
+            <input matInput formControlName="deadline" type="date">
+          </mat-form-field>
+
+          <!-- Proof Document Upload Section -->
+          <mat-divider></mat-divider>
+          <h3 class="section-title">📄 Proof Document (Optional)</h3>
+          <p class="section-subtitle">Upload supporting documents (images, PDF)</p>
+
+          <div class="document-upload-section">
+            <input #fileInput type="file" hidden (change)="onFileSelected($event)"
+              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            <button mat-raised-button color="primary" type="button" (click)="fileInput.click()"
+              [disabled]="uploadingDocument">
+              <mat-icon>upload_file</mat-icon>
+              {{ selectedFile ? 'Change Document' : 'Choose Document' }}
+            </button>
+
+            <div *ngIf="selectedFile" class="file-info">
+              <mat-icon class="success-icon">check_circle</mat-icon>
+              <div class="file-details">
+                <p class="file-name">{{ selectedFile.name }}</p>
+                <p class="file-size">{{ (selectedFile.size / 1024).toFixed(2) }} KB</p>
+              </div>
+              <button mat-icon-button type="button" (click)="clearSelectedFile()" matTooltip="Remove file"
+                [disabled]="uploadingDocument">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+
+            <div *ngIf="selectedFile && editingFund" class="upload-action">
+              <button mat-flat-button color="primary" type="button" (click)="uploadProofDocument(editingFund._id)"
+                [disabled]="uploadingDocument">
+                <mat-icon>{{ uploadingDocument ? 'hourglass_empty' : 'cloud_upload' }}</mat-icon>
+                {{ uploadingDocument ? 'Uploading...' : 'Upload This Document Now' }}
+              </button>
+            </div>
+
+            <p *ngIf="documentUploadError" class="upload-error">
+              <mat-icon>error</mat-icon>
+              {{ documentUploadError }}
+            </p>
+          </div>
+
+          <div class="form-actions">
+            <button mat-raised-button color="accent" type="submit" [disabled]="submitting || uploadingDocument">
+              {{ submitting ? (editingFund ? 'Updating...' : 'Creating...') : (editingFund ? 'Update Fund' : 'Create
+              Fund') }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-spinner *ngIf="loading" class="spinner"></mat-spinner>
+
+  <div class="card-container" *ngIf="!loading">
+    <mat-card *ngFor="let fund of funds" class="emergency-card" [class.high-priority]="fund.priority === 'high'">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="emergency-icon">emergency</mat-icon>
+          {{ fund.title }}
+        </mat-card-title>
+        <mat-card-subtitle>{{ fund.ngoId?.name }} - {{ fund.emergencyType }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ fund.description }}</p>
+        <div class="progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="(fund.collectedAmount / fund.requiredAmount * 100)"></div>
+          </div>
+          <div class="progress-text">
+            ₹{{ fund.collectedAmount }} / ₹{{ fund.requiredAmount }}
+          </div>
+        </div>
+        <div class="deadline">
+          <mat-icon>schedule</mat-icon>
+          <span>Deadline: {{ fund.deadline | date }}</span>
+        </div>
+
+        <!-- Proof Document Display Section -->
+        <div *ngIf="fund.proofDocument && fund.proofDocument.filename" class="proof-document-section">
+          <mat-divider></mat-divider>
+          <div class="document-info">
+            <mat-icon class="document-icon">description</mat-icon>
+            <div class="document-details">
+              <h4>Supporting Document</h4>
+              <p>{{ fund.proofDocument.originalName }}</p>
+              <small>Uploaded on {{ fund.proofDocument.uploadedAt | date }}</small>
+            </div>
+            <button mat-icon-button [matMenuTriggerFor]="documentMenu" matTooltip="Document options">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #documentMenu="matMenu">
+              <button mat-menu-item (click)="viewProofDocument(fund)">
+                <mat-icon>visibility</mat-icon>
+                <span>View Document</span>
+              </button>
+              <button mat-menu-item *ngIf="canManageFund(fund)" (click)="deleteProofDocument(fund)">
+                <mat-icon>delete</mat-icon>
+                <span>Remove Document</span>
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent" (click)="openDonationModal(fund)" *ngIf="!isNGOAdmin">Donate
+          Now</button>
+        <button *ngIf="canManageFund(fund)" mat-button color="primary" (click)="editFund(fund)">Edit</button>
+        <button *ngIf="canManageFund(fund)" mat-button color="primary" (click)="openDocumentUploadDialog(fund)">Upload
+          Document</button>
+        <button *ngIf="canManageFund(fund)" mat-button color="warn" (click)="deleteFund(fund)">Delete</button>
+        <span class="spacer"></span>
+        <button mat-icon-button (click)="shareFund(fund)" matTooltip="Share this emergency">
+          <mat-icon>share</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <p *ngIf="!loading && funds.length === 0" class="no-results">No active emergency funds.</p>
+</div>
+
+<!-- Thank You Modal Overlay -->
+<div class="thank-you-overlay" *ngIf="showThankYou">
+  <div class="confetti-container">
+    <div class="confetti" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]"></div>
+  </div>
+  <div class="thank-you-card">
+    <button mat-icon-button class="close-btn" (click)="closeThankYou()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div class="success-icon-wrapper">
+      <mat-icon>favorite</mat-icon>
+    </div>
+    <h2>Thank You!</h2>
+    <p class="amount-text">You donated ₹{{ lastDonationAmount | number }}</p>
+    <p class="message-text">Your generosity brings hope during this difficult time. Thank you for your support.</p>
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="closeThankYou()">Continue Exploring</button>
+      <button mat-stroked-button (click)="closeThankYou(); router.navigate(['/dashboard'])">Go to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- Donation Modal -->
+<div class="donation-modal-overlay" *ngIf="showDonationModal" (click)="closeDonationModal()">
+  <mat-card class="donation-modal" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>Emergency Donation</mat-card-title>
+      <button mat-icon-button (click)="closeDonationModal()" class="close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content *ngIf="selectedFund">
+      <div class="fund-summary">
+        <h3>{{ selectedFund.title }}</h3>
+        <p>{{ selectedFund.ngoId?.name }}</p>
+        <div class="progress">
+          <div class="progress-bar">
+            <div class="progress-fill"
+              [style.width.%]="(selectedFund.collectedAmount / selectedFund.requiredAmount * 100)"></div>
+          </div>
+          <div class="progress-text">
+            ₹{{ selectedFund.collectedAmount }} / ₹{{ selectedFund.requiredAmount }}
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="donationForm" class="donation-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Donation Amount (₹)</mat-label>
+          <input matInput type="number" formControlName="amount" min="1" placeholder="Enter amount">
+        </mat-form-field>
+
+        <mat-checkbox formControlName="isAnonymous">Donate anonymously (as "A Kind Soul")</mat-checkbox>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="closeDonationModal()">Cancel</button>
+      <button mat-raised-button color="accent" (click)="submitDonation()"
+        [disabled]="donationForm.invalid || isDonating">
+        <mat-icon *ngIf="!isDonating">emergency</mat-icon>
+        {{ isDonating ? 'Donating...' : 'Donate Now' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

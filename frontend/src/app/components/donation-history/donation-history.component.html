@@ -1,0 +1,97 @@
+<div class="donation-history-container">
+  <div class="page-header">
+    <h1>Your Giving Journey</h1>
+    <p class="subtitle">Every donation is a step towards a better world. Thank you for your kindness!</p>
+  </div>
+
+  <div class="summary-cards" *ngIf="!loading && donations.length > 0">
+    <mat-card class="summary-card">
+      <mat-card-content>
+        <h3>Total Donated</h3>
+        <p class="value">₹{{ stats.totalAmount | number:'1.0-0' }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="summary-card">
+      <mat-card-content>
+        <h3>Contributions</h3>
+        <p class="value">{{ stats.count }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="summary-card">
+      <mat-card-content>
+        <h3>Impact Points</h3>
+        <p class="value">{{ stats.impactPoints }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading your history...</p>
+  </div>
+
+  <div class="table-container mat-elevation-z1" *ngIf="!loading && donations.length > 0">
+    <table mat-table [dataSource]="donations" class="donations-table">
+
+      <!-- Receipt Column -->
+      <ng-container matColumnDef="receipt">
+        <th mat-header-cell *matHeaderCellDef>Transaction ID</th>
+        <td mat-cell *matCellDef="let donation">
+          <div class="receipt-box" (click)="downloadReceipt(donation)" matTooltip="Download Receipt">
+            <span class="id-text">#{{ donation.transactionId || donation._id?.substring(0,8).toUpperCase() }}</span>
+            <mat-icon class="download-icon">download_for_offline</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- NGO Column -->
+      <ng-container matColumnDef="ngo">
+        <th mat-header-cell *matHeaderCellDef>To Organization</th>
+        <td mat-cell *matCellDef="let donation">
+          <div class="ngo-info">
+            <span class="ngo-name">{{ donation.ngoId?.name }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Impact Type</th>
+        <td mat-cell *matCellDef="let donation">
+          <div class="type-badge" [style.background-color]="getTypeColor(donation.donationType) + '15'"
+            [style.color]="getTypeColor(donation.donationType)">
+            <mat-icon>{{ getTypeIcon(donation.donationType) }}</mat-icon>
+            <span>{{ (donation.donationType || 'General') | uppercase }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Amount Column -->
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Amount</th>
+        <td mat-cell *matCellDef="let donation">
+          <span class="amount-cell">₹{{ donation.amount | number:'1.2-2' }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let donation">
+          <div class="date-info">
+            <span class="primary-date">{{ donation.createdAt | date:'mediumDate' }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="donation-row"></tr>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && donations.length === 0" class="no-results">
+    <mat-icon>volunteer_activism</mat-icon>
+    <p>You haven't made any donations yet. Start your journey today!</p>
+    <button mat-raised-button color="primary" routerLink="/marketplace" style="margin-top: 24px;">Explore NGOs</button>
+  </div>
+</div>

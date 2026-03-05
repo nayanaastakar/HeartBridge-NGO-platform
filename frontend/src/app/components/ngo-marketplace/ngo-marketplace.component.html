@@ -1,0 +1,80 @@
+<div class="marketplace-wrapper">
+  <!-- Hero Section with Pastel Gradient -->
+  <header class="marketplace-hero">
+    <div class="hero-content">
+      <h1 class="fade-in-down">Connecting Hearts, Changing Lives</h1>
+      <p class="hero-subtitle fade-in">Discover transparent, verified, and high-impact NGOs across India.</p>
+
+      <div class="hero-search-container fade-in-up">
+        <mat-form-field appearance="outline" class="glass-search">
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [(ngModel)]="searchQuery" (input)="searchNGOs()" placeholder="Find a cause you care about...">
+          <button *ngIf="searchQuery" matSuffix mat-icon-button aria-label="Clear"
+            (click)="searchQuery=''; searchNGOs()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+    </div>
+  </header>
+
+  <div class="marketplace-container">
+    <!-- Filter Section -->
+    <div class="filter-section fade-in">
+      <mat-chip-listbox [(ngModel)]="selectedCategory" (change)="filterByCategory($event)">
+        <mat-chip-option *ngFor="let category of categories" [value]="category">
+          {{ category }}
+        </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+
+    <div class="flex justify-center" *ngIf="loading">
+      <mat-spinner class="spinner"></mat-spinner>
+    </div>
+
+    <!-- Grid Container -->
+    <div class="card-container" *ngIf="!loading && filteredNGOs.length > 0">
+      <mat-card *ngFor="let ngo of filteredNGOs" class="ngo-card-refined" [ngClass]="getThemeClass(ngo.category)">
+
+        <mat-card-header>
+          <div mat-card-avatar class="ngo-logo-container">
+            <mat-icon *ngIf="!ngo.logo" class="placeholder-logo-icon">account_balance</mat-icon>
+            <img *ngIf="ngo.logo" [src]="ngoService.getFullImageUrl(ngo.logo)" [alt]="ngo.name" class="ngo-logo"
+              (error)="onImageError($event, ngo.category)">
+          </div>
+          <mat-card-title class="ngo-name-text">
+            {{ ngo.name }}
+            <mat-icon *ngIf="ngo.isVerified" class="verified-icon" matTooltip="Verified NGO">verified</mat-icon>
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p class="description-text">{{ ngo.description }}</p>
+
+          <div class="stats-refined">
+            <div class="stat-item">
+              <span class="label">Received</span>
+              <span class="value">₹{{ ngo.totalReceived || 0 | number }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Target</span>
+              <span class="value">₹{{ ngo.fundingRequirement || 0 | number }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-flat-button color="primary" [routerLink]="['/ngo', ngo._id || ngo.id]">
+            View Details
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <div *ngIf="!loading && filteredNGOs.length === 0" class="no-results">
+      <mat-icon>sentiment_very_dissatisfied</mat-icon>
+      <p>No NGOs found matching your criteria.</p>
+      <button mat-stroked-button (click)="resetFilters()">Clear all filters</button>
+    </div>
+  </div>
+</div>

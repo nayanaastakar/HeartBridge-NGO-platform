@@ -1,0 +1,161 @@
+<div class="adopt-a-day-container">
+  <div class="page-header">
+    <h1>Adopt a Day</h1>
+    <p class="subtitle">Sponsor a complete day of care, food, or celebration</p>
+  </div>
+
+  <div *ngIf="isNGOAdmin" class="ngo-admin-section">
+    <button mat-raised-button color="primary" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Cancel' : 'Create Adopt-a-Day Program' }}
+    </button>
+
+    <mat-card *ngIf="showCreateForm" class="create-form-card">
+      <mat-card-header>
+        <mat-card-title>{{ editingDay ? 'Edit Adopt-a-Day Program' : 'Create an Adopt-a-Day Program' }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="createForm" (ngSubmit)="submitAdoptADay()">
+          <mat-form-field appearance="fill">
+            <mat-label>Program Date</mat-label>
+            <input matInput formControlName="date" type="date">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Program Purpose</mat-label>
+            <input matInput formControlName="purpose" placeholder="e.g., Orphanage Day Care">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="4"
+              placeholder="Describe what this day program includes"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Required Amount (₹)</mat-label>
+            <input matInput formControlName="requiredAmount" type="number" placeholder="Amount needed per day">
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="submitting">
+              {{ submitting ? (editingDay ? 'Updating...' : 'Creating...') : (editingDay ? 'Update Program' : 'Create
+              Program') }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-spinner *ngIf="loading" class="spinner"></mat-spinner>
+
+  <div class="card-container" *ngIf="!loading">
+    <mat-card *ngFor="let day of days" class="day-card">
+      <mat-card-header>
+        <mat-card-title>{{ day.purpose }}</mat-card-title>
+        <mat-card-subtitle>{{ day.ngoId?.name }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="date">
+          <mat-icon>calendar_today</mat-icon>
+          <span>{{ day.date | date:'fullDate' }}</span>
+        </div>
+        <div class="amount">
+          <strong>Amount Required: ₹{{ day.requiredAmount }}</strong>
+        </div>
+        <p class="description">{{ day.description }}</p>
+        <div class="progress" *ngIf="day.collectedAmount > 0">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="(day.collectedAmount / day.requiredAmount * 100)"></div>
+          </div>
+          <div class="progress-text">
+            ₹{{ day.collectedAmount }} / ₹{{ day.requiredAmount }}
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="openAdoptModal(day)" *ngIf="!isNGOAdmin">Adopt This
+          Day</button>
+        <button *ngIf="canManageDay(day)" mat-button color="accent" (click)="editDay(day)">Edit</button>
+        <button *ngIf="canManageDay(day)" mat-button color="warn" (click)="deleteDay(day)">Delete</button>
+        <span class="spacer"></span>
+        <button mat-icon-button (click)="shareDay(day)" matTooltip="Share this program">
+          <mat-icon>share</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <p *ngIf="!loading && days.length === 0" class="no-results">No days available for adoption.</p>
+</div>
+
+<!-- Thank You Modal Overlay -->
+<div class="thank-you-overlay" *ngIf="showThankYou">
+  <div class="confetti-container">
+    <div class="confetti" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]"></div>
+  </div>
+  <div class="thank-you-card">
+    <button mat-icon-button class="close-btn" (click)="closeThankYou()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div class="success-icon-wrapper">
+      <mat-icon>celebration</mat-icon>
+    </div>
+    <h2>Thank You!</h2>
+    <p class="amount-text">You adopted a day with ₹{{ lastDonationAmount | number }}</p>
+    <p class="message-text">Your contribution will make this day truly special for everyone. Thank you for your
+      kindness!</p>
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="closeThankYou()">Adopt Another Day</button>
+      <button mat-stroked-button (click)="closeThankYou(); router.navigate(['/dashboard'])">Go to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- Adoption Modal -->
+<div class="adoption-modal-overlay" *ngIf="showAdoptModal" (click)="closeAdoptModal()">
+  <mat-card class="adoption-modal" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>Adopt a Day</mat-card-title>
+      <button mat-icon-button (click)="closeAdoptModal()" class="close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content *ngIf="selectedDay">
+      <div class="day-summary">
+        <h3>{{ selectedDay.purpose }}</h3>
+        <p>{{ selectedDay.ngoId?.name }}</p>
+        <div class="date">
+          <mat-icon>calendar_today</mat-icon>
+          <span>{{ selectedDay.date | date:'fullDate' }}</span>
+        </div>
+        <div class="progress" *ngIf="selectedDay.collectedAmount > 0">
+          <div class="progress-bar">
+            <div class="progress-fill"
+              [style.width.%]="(selectedDay.collectedAmount / selectedDay.requiredAmount * 100)"></div>
+          </div>
+          <div class="progress-text">
+            ₹{{ selectedDay.collectedAmount }} / ₹{{ selectedDay.requiredAmount }}
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="adoptForm" class="adoption-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Adoption Amount (₹)</mat-label>
+          <input matInput type="number" formControlName="amount" [value]="selectedDay.requiredAmount" min="1"
+            placeholder="Enter amount">
+        </mat-form-field>
+
+        <mat-checkbox formControlName="isAnonymous">Adopt anonymously (as "A Kind Soul")</mat-checkbox>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="closeAdoptModal()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="submitAdoption()" [disabled]="adoptForm.invalid || isAdopting">
+        <mat-icon *ngIf="!isAdopting">favorite</mat-icon>
+        {{ isAdopting ? 'Adopting...' : 'Adopt This Day' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

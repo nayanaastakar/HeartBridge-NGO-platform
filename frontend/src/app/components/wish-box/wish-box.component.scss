@@ -1,0 +1,614 @@
+.wish-box-container {
+  padding: 40px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 70px);
+  background-color: var(--bg-main);
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding: 60px 32px;
+    background: linear-gradient(135deg, var(--pastel-indigo) 0%, var(--pastel-violet) 100%);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-light);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -15%;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 8px;
+      font-family: var(--font-heading);
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin: 0;
+    }
+  }
+}
+
+.ngo-admin-section {
+  margin-bottom: 32px;
+  padding: 24px;
+  background-color: #f5f3ff;
+  /* Violet-50 tint */
+  border-radius: var(--radius-lg);
+  border: 1px solid #ddd6fe;
+  /* Violet-200 */
+}
+
+.create-form-card {
+  margin-top: 24px;
+  background: transparent;
+  box-shadow: none;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+}
+
+.filters {
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  button {
+    border-radius: var(--radius-full);
+    padding: 0 24px;
+    font-weight: 600;
+
+    &.active {
+      background-color: var(--primary);
+      color: white;
+    }
+  }
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.wish-card {
+  margin-bottom: 0;
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-left: 4px solid transparent;
+
+  &:nth-child(4n+1) {
+    border-left-color: var(--primary);
+  }
+
+  &:nth-child(4n+2) {
+    border-left-color: var(--purple);
+  }
+
+  &:nth-child(4n+3) {
+    border-left-color: var(--pink);
+  }
+
+  &:nth-child(4n+4) {
+    border-left-color: var(--orange);
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  mat-card-header {
+    padding: 24px 24px 0 24px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+
+    .wish-badges {
+      margin-bottom: 12px;
+      display: flex;
+      gap: 8px;
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
+
+        &.personal-badge {
+          background-color: #fff1f2;
+          color: #e11d48;
+          border: 1px solid rgba(225, 29, 72, 0.1);
+        }
+
+        &.ngo-badge {
+          background-color: #f0fdfa;
+          color: #0d9488;
+          border: 1px solid rgba(13, 148, 136, 0.1);
+        }
+      }
+    }
+
+    .mat-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .mat-card-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+
+  mat-card-content {
+    padding: 0 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+
+    p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+
+  .progress {
+    margin: 20px 0;
+
+    .progress-bar {
+      height: 10px;
+      background-color: var(--bg-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: 10px;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary) 0%, var(--purple) 100%);
+        border-radius: var(--radius-full);
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+
+    .progress-text {
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+
+      .collected {
+        color: var(--text-secondary);
+
+        small {
+          color: var(--text-tertiary);
+        }
+      }
+
+      .percentage {
+        color: var(--primary);
+        font-weight: 700;
+      }
+    }
+  }
+
+  .deadline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-tertiary);
+    margin: 16px 0 24px 0;
+    font-size: 0.85rem;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  mat-card-actions {
+    padding: 16px 24px;
+    margin-top: auto; // Force to bottom
+    border-top: 1px solid var(--border-light);
+    background-color: var(--bg-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+
+    .donate-btn {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      padding: 0 20px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      transition: all 0.2s;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+      }
+
+      &:disabled {
+        background: #e2e8f0;
+        color: #94a3b8;
+        box-shadow: none;
+      }
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+
+      button {
+        height: 40px;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+    }
+  }
+}
+
+.donation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  .donation-modal {
+    width: 90%;
+    max-width: 500px;
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    animation: fadeInUp 0.3s ease-out;
+
+    mat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: 24px 24px 0 24px;
+
+      mat-card-title {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .close-btn {
+        position: absolute;
+        right: 16px;
+        top: 16px;
+        color: var(--text-tertiary);
+
+        &:hover {
+          color: var(--text-primary);
+          background-color: var(--bg-subtle);
+        }
+      }
+    }
+
+    mat-card-content {
+      padding: 0 24px;
+    }
+
+    .wish-summary {
+      margin-bottom: 24px;
+      padding: 16px;
+      background-color: var(--bg-subtle);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-light);
+
+      h3 {
+        margin: 0 0 8px 0;
+        color: var(--text-primary);
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      p {
+        margin: 0 0 16px 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .progress {
+        margin: 0;
+
+        .progress-bar {
+          height: 6px;
+          background-color: rgba(0, 0, 0, 0.05);
+          border-radius: var(--radius-full);
+          overflow: hidden;
+
+          .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+          }
+        }
+      }
+    }
+
+    .donation-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 16px;
+
+      .full-width {
+        width: 100%;
+      }
+    }
+
+    mat-card-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 16px 24px;
+      background-color: var(--bg-subtle);
+      border-top: 1px solid var(--border-light);
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Thank You Overlay
+.thank-you-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.thank-you-card {
+  background: white;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 32px;
+  padding: 40px 32px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: popUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+
+  .close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: var(--text-tertiary);
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--text-primary);
+    }
+  }
+
+  .success-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 10px 25px rgba(244, 63, 94, 0.4);
+    animation: bounceIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+
+    mat-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: white;
+    }
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    animation: fadeInUp 0.6s ease-out 0.4s backwards;
+  }
+
+  .amount-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #10b981; // Emerald
+    margin-bottom: 12px;
+    animation: fadeInUp 0.6s ease-out 0.5s backwards;
+  }
+
+  .message-text {
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+    line-height: 1.6;
+    animation: fadeInUp 0.6s ease-out 0.6s backwards;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: fadeInUp 0.6s ease-out 0.7s backwards;
+
+    button {
+      height: 48px;
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Confetti Animation (Pure CSS approach for simplicity)
+.confetti-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #f2d74e;
+  opacity: 0;
+}
+
+@for $i from 1 through 20 {
+  .confetti:nth-child(#{$i}) {
+    left: random(100) * 1%;
+    top: -10%;
+    background-color: nth((#f43f5e, #10b981, #3b82f6, #f59e0b, #8b5cf6),
+        random(5));
+    animation: confetti-fall #{random(3) + 2}s linear infinite;
+    animation-delay: #{random(2)}s;
+    transform: rotate(#{random(360)}deg);
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    top: -10%;
+    transform: rotate(0deg) translateX(0);
+    opacity: 1;
+  }
+
+  100% {
+    top: 110%;
+    transform: rotate(360deg) translateX(random(50) - 25px);
+    opacity: 0;
+  }
+}
+
+@keyframes popUp {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

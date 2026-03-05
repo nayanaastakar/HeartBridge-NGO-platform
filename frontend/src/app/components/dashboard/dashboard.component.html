@@ -1,0 +1,94 @@
+<div class="dashboard-container">
+  <div class="welcome-banner">
+    <div class="welcome-text-group">
+      <h1>Welcome, {{ user?.name }}! 👋</h1>
+      <p class="welcome-subtitle">Here's an overview of your impact on HeartBridge</p>
+    </div>
+    <div class="badge-display" [ngClass]="getBadgeInfo().class" *ngIf="user?.role === 'donor'">
+      <mat-icon>{{ getBadgeInfo().icon }}</mat-icon>
+      <span>{{ getBadgeInfo().label }}</span>
+    </div>
+  </div>
+
+  <div class="dashboard-header">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button mat-stroked-button color="accent" routerLink="/profile">
+        <mat-icon>person</mat-icon>
+        My Profile
+      </button>
+      <button mat-icon-button (click)="refreshDashboard()" matTooltip="Refresh Dashboard" [disabled]="loading">
+        <mat-icon [class.spinning]="loading">refresh</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <mat-card>
+      <mat-card-title>Total Donated</mat-card-title>
+      <mat-card-content>
+        <h2>{{ dashboardData?.totalDonated?.totalAmount || 0 | currency:'INR':'symbol':'1.0-0' }}</h2>
+        <p>{{ dashboardData?.totalDonated?.count || 0 }} donations</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>NGOs Supported</mat-card-title>
+      <mat-card-content>
+        <h2>{{ dashboardData?.ngosSupported || 0 }}</h2>
+        <p>Organizations</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="impact-level-card">
+      <mat-card-title>Impact Level</mat-card-title>
+      <mat-card-content>
+        <div class="impact-points-badge">
+          <mat-icon [style.color]="getBadgeInfo().color">{{ getBadgeInfo().icon }}</mat-icon>
+          <h2>{{ getImpactPoints() }}</h2>
+        </div>
+        <p>Impact Points Earned</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="recent-donations">
+    <mat-card-header>
+      <mat-card-title>Recent Donations</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="loading" class="loading-state">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading...</p>
+      </div>
+      <mat-list *ngIf="!loading && dashboardData?.recentDonations && dashboardData.recentDonations.length > 0">
+        <mat-list-item *ngFor="let donation of dashboardData.recentDonations">
+          <mat-icon matListItemIcon>favorite</mat-icon>
+          <div matListItemTitle>{{ donation.ngoId?.name || 'Unknown NGO' }}</div>
+          <div matListItemLine>{{ donation.amount | currency:'INR':'symbol':'1.0-0' }} - {{ donation.createdAt | date }}
+          </div>
+        </mat-list-item>
+      </mat-list>
+      <p *ngIf="!loading && (!dashboardData?.recentDonations || dashboardData.recentDonations.length === 0)"
+        class="no-donations">
+        No donations yet. Start making a difference!
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="actions">
+    <button mat-raised-button color="primary" routerLink="/marketplace">
+      <mat-icon>explore</mat-icon>
+      Browse NGOs
+    </button>
+    <button mat-raised-button class="history-btn" routerLink="/donation-history">
+      <mat-icon>history</mat-icon>
+      View History
+    </button>
+    <button mat-raised-button [color]="getImpactPoints() >= 1000 ? 'accent' : ''"
+      [class.locked-btn]="getImpactPoints() < 1000" (click)="downloadCertificate()"
+      [matTooltip]="getImpactPoints() < 1000 ? 'Earn 1,000 Impact Points to unlock' : 'Download your official recognition'">
+      <mat-icon>{{ getImpactPoints() >= 1000 ? 'workspace_premium' : 'lock' }}</mat-icon>
+      {{ getImpactPoints() >= 1000 ? 'Download Certificate' : 'Certificate Locked' }}
+    </button>
+  </div>
+</div>

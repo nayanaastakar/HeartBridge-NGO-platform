@@ -1,0 +1,112 @@
+<div class="admin-register-container">
+  <div class="admin-layout">
+    <!-- Left Panel: Security Info -->
+    <div class="security-panel">
+      <div class="security-visual">
+        <div class="glow-sphere"></div>
+        <mat-icon class="shield-icon">admin_panel_settings</mat-icon>
+      </div>
+      <div class="security-content">
+        <div class="brand-top">
+          <mat-icon class="brand-icon">how_to_reg</mat-icon>
+          <span class="brand-name">SYSTEM REGISTRY</span>
+        </div>
+        <div class="badge neon-text">System Administrator</div>
+        <h1>New Admin <span class="accent">Registration</span></h1>
+        <p>Register a new administrative account to manage the HeartBridge platform.</p>
+      </div>
+    </div>
+
+    <!-- Right Panel: Register Form -->
+    <div class="register-panel">
+      <div class="form-card-wrapper fade-in-right">
+        <div class="admin-logo-badge">
+          <mat-icon>manage_accounts</mat-icon>
+        </div>
+
+        <div class="form-header">
+          <h2>Admin Registration</h2>
+          <p>Register a new administrative account.</p>
+        </div>
+
+        <form [formGroup]="adminRegisterForm" (ngSubmit)="onSubmit()" class="admin-form">
+          <div class="input-wrapper">
+            <label>Display Name</label>
+            <div class="input-field">
+              <input type="text" id="admin-register-name" name="admin_name" formControlName="name"
+                placeholder="Full Name" autocomplete="name" required>
+              <mat-icon>person</mat-icon>
+            </div>
+            <div class="error-message" *ngIf="adminRegisterForm.get('name')?.touched && adminRegisterForm.get('name')?.errors">
+              {{ adminRegisterForm.get('name')?.errors | json }}
+            </div>
+          </div>
+
+          <div class="input-wrapper">
+            <label>Administrative Email</label>
+            <div class="input-field">
+              <input type="email" id="admin-register-email" name="admin_email" formControlName="email"
+                placeholder="admin@heartbridge.com" autocomplete="email" required>
+              <mat-icon>email</mat-icon>
+            </div>
+            <div class="error-message" *ngIf="adminRegisterForm.get('email')?.touched && adminRegisterForm.get('email')?.errors">
+              {{ adminRegisterForm.get('email')?.errors | json }}
+            </div>
+          </div>
+
+          <div class="input-row">
+            <div class="input-wrapper flex-1">
+              <label>Access Key</label>
+              <div class="input-field">
+                <input type="password" id="admin-register-password" name="admin_password" formControlName="password"
+                  placeholder="••••••••" autocomplete="new-password" required>
+                <mat-icon>lock</mat-icon>
+              </div>
+              <div class="error-message" *ngIf="adminRegisterForm.get('password')?.touched && adminRegisterForm.get('password')?.errors">
+                {{ adminRegisterForm.get('password')?.errors | json }}
+              </div>
+            </div>
+            <div class="input-wrapper flex-1">
+              <label>Verify Key</label>
+              <div class="input-field">
+                <input type="password" id="admin-register-confirm" name="admin_confirm"
+                  formControlName="confirmPassword" placeholder="••••••••" autocomplete="new-password" required>
+                <mat-icon>lock_reset</mat-icon>
+              </div>
+              <div class="error-message" *ngIf="adminRegisterForm.get('confirmPassword')?.touched && adminRegisterForm.get('confirmPassword')?.errors">
+                {{ adminRegisterForm.get('confirmPassword')?.errors | json }}
+              </div>
+              <div class="error-message" *ngIf="adminRegisterForm.errors?.['passwordMismatch']">
+                Passwords do not match!
+              </div>
+            </div>
+          </div>
+
+          <div class="input-wrapper">
+            <label>Registration Admin Key</label>
+            <div class="input-field">
+              <input type="text" id="admin-register-key" name="admin_key" formControlName="adminKey"
+                placeholder="Paste the admin key here" autocomplete="off" required>
+              <mat-icon>security</mat-icon>
+            </div>
+            <div class="error-message" *ngIf="adminRegisterForm.get('adminKey')?.touched && adminRegisterForm.get('adminKey')?.errors">
+              {{ adminRegisterForm.get('adminKey')?.errors | json }}
+            </div>
+          </div>
+
+          <button mat-raised-button type="submit" class="authorize-btn"
+            [disabled]="adminRegisterForm.invalid || loading">
+            <span *ngIf="!loading">REGISTER ADMIN</span>
+            <mat-spinner diameter="24" *ngIf="loading"></mat-spinner>
+          </button>
+        </form>
+
+        <div class="portal-footer">
+          <a routerLink="/admin-login">Terminal Login</a>
+          <div class="sep"></div>
+          <a routerLink="/login">Public Portal</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

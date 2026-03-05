@@ -1,0 +1,302 @@
+<div class="discussions-container">
+  <!-- Header -->
+  <div class="discussions-header">
+    <h1>Community Discussions</h1>
+    <p class="subtitle">Share knowledge, ask questions, and connect with donors and NGO leaders</p>
+  </div>
+
+  <!-- View List or Details -->
+  <div *ngIf="!selectedDiscussion" class="discussions-list-view">
+    <!-- Controls Bar -->
+    <div class="controls-bar">
+      <div class="search-box">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Search discussions</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (keyup)="onSearch()" placeholder="Enter keywords...">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="category-filter">
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange()">
+            <mat-option *ngFor="let cat of categories" [value]="cat">
+              {{ cat }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <button mat-raised-button color="primary" (click)="showNewDiscussionForm = true" *ngIf="currentUser">
+        <mat-icon>add</mat-icon> New Discussion
+      </button>
+    </div>
+
+    <!-- New Discussion Form -->
+    <div *ngIf="showNewDiscussionForm" class="new-discussion-form fade-in-down">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Start a New Discussion</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Topic Title</mat-label>
+            <input matInput [(ngModel)]="newDiscussionTitle" placeholder="What's your discussion about?"
+              maxlength="200">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Category</mat-label>
+            <mat-select [(ngModel)]="selectedCategory">
+              <mat-option *ngFor="let cat of categories.slice(1)" [value]="cat">
+                {{ cat }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput [(ngModel)]="newDiscussionContent" placeholder="Provide details about your discussion..."
+              maxlength="5000" rows="5"></textarea>
+            <mat-hint>{{ newDiscussionContent.length }} / 5000</mat-hint>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button (click)="showNewDiscussionForm = false">Cancel</button>
+          <button mat-raised-button color="primary" (click)="createDiscussion()">Post Discussion</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <!-- Discussions List -->
+    <div *ngIf="!loading && discussions.length > 0" class="discussions-grid">
+      <mat-card *ngFor="let discussion of discussions" class="discussion-card" (click)="selectDiscussion(discussion)">
+        <mat-card-header>
+          <div class="header-content">
+            <div class="title-section">
+              <h3 class="discussion-title">{{ discussion.title }}</h3>
+              <mat-chip-set aria-label="Category">
+                <mat-chip [highlighted]="true" [color]="discussion.category | lowercase">
+                  {{ discussion.category }}
+                </mat-chip>
+                <mat-chip *ngIf="discussion.isNgoAdmin" class="expert-badge">
+                  <mat-icon>verified</mat-icon> NGO Admin
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p class="discussion-preview">{{ discussion.content | slice:0:150 }}...</p>
+          <div class="meta-info">
+            <span class="author">By {{ discussion.creatorName }}</span>
+            <span class="separator">•</span>
+            <span class="created-date">{{ discussion.createdAt | date:'short' }}</span>
+          </div>
+        </mat-card-content>
+
+        <mat-card-footer>
+          <div class="stats">
+            <span>
+              <mat-icon>visibility</mat-icon>
+              {{ discussion.views }} views
+            </span>
+            <span>
+              <mat-icon>comment</mat-icon>
+              {{ discussion.replies.length }} replies
+            </span>
+            <span>
+              <mat-icon>thumb_up</mat-icon>
+              {{ discussion.helpfulCount }} helpful
+            </span>
+            <button mat-icon-button (click)="shareDiscussion($event, discussion)" matTooltip="Share this discussion">
+              <mat-icon>share</mat-icon>
+            </button>
+          </div>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && discussions.length === 0" class="empty-state">
+      <mat-icon>forum</mat-icon>
+      <p>No discussions found</p>
+      <button mat-raised-button color="primary" (click)="showNewDiscussionForm = true" *ngIf="currentUser">
+        Start First Discussion
+      </button>
+    </div>
+  </div>
+
+  <!-- View Discussion Details -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading discussion details...</p>
+  </div>
+
+  <div *ngIf="!loading && selectedDiscussion" class="discussion-detail-view fade-in">
+    <button mat-button (click)="goBack()" class="back-button">
+      <mat-icon>arrow_back</mat-icon> Back to Discussions
+    </button>
+
+    <mat-card class="discussion-detail-card">
+      <mat-card-header>
+        <div class="detail-header">
+          <h2>{{ selectedDiscussion.title }}</h2>
+          <mat-chip-set>
+            <mat-chip [highlighted]="true">{{ selectedDiscussion.category }}</mat-chip>
+            <mat-chip *ngIf="selectedDiscussion.isNgoAdmin" class="expert-badge">
+              <mat-icon>verified</mat-icon> NGO Admin
+            </mat-chip>
+            <mat-chip *ngIf="selectedDiscussion.isSolved" class="solved-badge">
+              <mat-icon>check_circle</mat-icon> Solved
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+        <div class="author-info">
+          <span>Posted by <strong>{{ selectedDiscussion.creatorName }}</strong></span>
+          <span class="separator">•</span>
+          <span>{{ selectedDiscussion.createdAt | date:'medium' }}</span>
+
+          <span class="spacer"></span>
+
+          <div class="admin-buttons" *ngIf="currentUser">
+            <button mat-icon-button color="primary" *ngIf="canEditDiscussion(selectedDiscussion)"
+              (click)="startEditDiscussion()" matTooltip="Edit Discussion">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" *ngIf="canDeleteDiscussion(selectedDiscussion)"
+              (click)="deleteDiscussion($event, selectedDiscussion._id)" matTooltip="Delete Discussion">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content class="discussion-content">
+        <div *ngIf="!isEditingDiscussion">
+          <p>{{ selectedDiscussion.content }}</p>
+        </div>
+
+        <div *ngIf="isEditingDiscussion" class="edit-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Edit Title</mat-label>
+            <input matInput [(ngModel)]="editTitle">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Edit Content</mat-label>
+            <textarea matInput [(ngModel)]="editContent" rows="8"></textarea>
+          </mat-form-field>
+          <div class="edit-actions">
+            <button mat-button (click)="isEditingDiscussion = false">Cancel</button>
+            <button mat-raised-button color="primary" (click)="saveEditDiscussion()">Save Changes</button>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="discussion-actions">
+        <button mat-raised-button color="primary" (click)="scrollToReplyForm()">
+          <mat-icon>reply</mat-icon> Reply to Topic
+        </button>
+        <button mat-button (click)="shareDiscussion($event)">
+          <mat-icon>share</mat-icon> Share
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Replies Section -->
+    <div class="replies-section" id="replies">
+      <h3>Replies ({{ selectedDiscussion.replies?.length || 0 }})</h3>
+
+      <div *ngIf="!selectedDiscussion.replies?.length" class="no-replies">
+        <mat-icon>chat_bubble_outline</mat-icon>
+        <p>No replies yet. Be the first to join the conversation!</p>
+      </div>
+
+      <div *ngFor="let reply of selectedDiscussion.replies || []" class="reply-card fade-in-up">
+        <mat-card>
+          <mat-card-header>
+            <div class="reply-header">
+              <div class="reply-author">
+                <strong>{{ reply.userName }}</strong>
+                <mat-chip *ngIf="reply.isNgoAdmin" class="expert-badge">
+                  <mat-icon>verified</mat-icon>
+                </mat-chip>
+              </div>
+              <span class="reply-date">{{ reply.createdAt | date:'short' }}</span>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div *ngIf="editingReplyId !== reply._id">
+              <p>{{ reply.content }}</p>
+            </div>
+
+            <div *ngIf="editingReplyId === reply._id" class="edit-reply-form">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Edit Reply</mat-label>
+                <textarea matInput [(ngModel)]="editReplyContent" rows="4"></textarea>
+              </mat-form-field>
+              <div class="edit-actions">
+                <button mat-button (click)="editingReplyId = null">Cancel</button>
+                <button mat-raised-button color="primary" (click)="saveEditReply(reply._id)">Save</button>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-button (click)="markAsHelpful(reply._id)" [class.is-helpful]="reply.isHelpful"
+              title="Mark as helpful">
+              <mat-icon>{{ reply.isHelpful ? 'thumb_up' : 'thumb_up_off_alt' }}</mat-icon>
+              {{ reply.isHelpful ? 'Helpful' : 'Mark Helpful' }}
+            </button>
+
+            <button mat-button *ngIf="canEditReply(reply)" (click)="startEditReply(reply)">
+              <mat-icon>edit</mat-icon> Edit
+            </button>
+
+            <button mat-button color="warn" *ngIf="canDeleteReply(reply)" (click)="deleteReply(reply._id)">
+              <mat-icon>delete</mat-icon> Delete
+            </button>
+
+            <button mat-button (click)="scrollToReplyForm()">
+              <mat-icon>reply</mat-icon> Reply
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <!-- Add Reply Form -->
+      <mat-card *ngIf="currentUser" class="reply-form-card" id="reply-form">
+        <mat-card-header>
+          <mat-card-title>Post a Reply</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Share your thoughts...</mat-label>
+            <textarea matInput [(ngModel)]="newReply" placeholder="Write your response here..." maxlength="2000"
+              rows="5"></textarea>
+            <mat-hint align="end">{{ newReply.length }} / 2000</mat-hint>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-raised-button color="primary" (click)="addReply()" [disabled]="!newReply.trim()">
+            <mat-icon>send</mat-icon> Submit Reply
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- Login Prompt -->
+      <div *ngIf="!currentUser" class="login-prompt">
+        <p>Please login to post a reply.</p>
+        <button mat-raised-button color="primary" routerLink="/login">Login</button>
+      </div>
+    </div>
+  </div>
+</div>

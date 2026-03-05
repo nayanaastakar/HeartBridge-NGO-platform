@@ -1,0 +1,118 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit' : 'Create' }} Impact Story</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="storyForm" (ngSubmit)="onSubmit()">
+
+        <!-- Title & Category -->
+        <div class="row">
+            <mat-form-field appearance="outline" class="col-2">
+                <mat-label>Story Title</mat-label>
+                <input matInput formControlName="title" placeholder="e.g., A New Life for Ravi">
+                <mat-error *ngIf="storyForm.get('title')?.hasError('required')">Title is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-1">
+                <mat-label>Category</mat-label>
+                <mat-select formControlName="category">
+                    <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Overview -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Problem Statement</mat-label>
+            <textarea matInput formControlName="problemStatement" rows="3"
+                placeholder="Describe the initial situation..."></textarea>
+            <mat-error *ngIf="storyForm.get('problemStatement')?.hasError('minlength')">Must be at least 20
+                characters</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Solution & Impact Description</mat-label>
+            <textarea matInput formControlName="solutionDescription" rows="4"
+                placeholder="How did the donation help? What changed?"></textarea>
+            <mat-error *ngIf="storyForm.get('solutionDescription')?.hasError('minlength')">Must be at least 20
+                characters</mat-error>
+        </mat-form-field>
+
+        <!-- Stats Row 1 -->
+        <div class="row three-col">
+            <mat-form-field appearance="outline">
+                <mat-label>Amount Raised (₹)</mat-label>
+                <input matInput type="number" formControlName="amountRaised">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Target Amount (₹)</mat-label>
+                <input matInput type="number" formControlName="amountRequired">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Donor Count</mat-label>
+                <input matInput type="number" formControlName="donorCount">
+            </mat-form-field>
+        </div>
+
+        <!-- Stats Row 2 -->
+        <div class="row">
+            <mat-form-field appearance="outline" class="col-1">
+                <mat-label>Beneficiaries Reached</mat-label>
+                <input matInput type="number" formControlName="beneficiariesReached">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-1">
+                <mat-label>Implementation Time (Months)</mat-label>
+                <input matInput type="number" formControlName="implementationMonths">
+            </mat-form-field>
+        </div>
+
+        <!-- Services -->
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Services Provided</mat-label>
+            <mat-select formControlName="servicesProvided" multiple>
+                <mat-option *ngFor="let service of availableServices" [value]="service">{{ service }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Photo Uploads -->
+        <div class="photos-section">
+            <div class="photo-upload">
+                <h3>Before Photo</h3>
+                <div class="preview-box" (click)="beforeInput.click()" [class.has-image]="beforePreview">
+                    <img *ngIf="beforePreview" [src]="beforePreview" alt="Before Preview">
+                    <div *ngIf="!beforePreview" class="placeholder">
+                        <mat-icon>add_a_photo</mat-icon>
+                        <span>Upload Before Photo</span>
+                    </div>
+                    <input #beforeInput type="file" (change)="onFileSelected($event, 'before')" hidden accept="image/*">
+                </div>
+                <button type="button" mat-button color="warn" *ngIf="beforePreview"
+                    (click)="removeFile('before')">Remove</button>
+            </div>
+
+            <div class="photo-upload">
+                <h3>After Photo</h3>
+                <div class="preview-box" (click)="afterInput.click()" [class.has-image]="afterPreview">
+                    <img *ngIf="afterPreview" [src]="afterPreview" alt="After Preview">
+                    <div *ngIf="!afterPreview" class="placeholder">
+                        <mat-icon>add_a_photo</mat-icon>
+                        <span>Upload After Photo</span>
+                    </div>
+                    <input #afterInput type="file" (change)="onFileSelected($event, 'after')" hidden accept="image/*">
+                </div>
+                <button type="button" mat-button color="warn" *ngIf="afterPreview"
+                    (click)="removeFile('after')">Remove</button>
+            </div>
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close [disabled]="loading">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="storyForm.invalid || loading">
+        <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+        <span *ngIf="!loading">{{ isEditMode ? 'Update Story' : 'Post Story' }}</span>
+    </button>
+</mat-dialog-actions>

@@ -1,0 +1,58 @@
+<div class="admin-ngos-container">
+  <h1>NGO Management</h1>
+
+  <div class="actions">
+    <button mat-raised-button (click)="loadNGOs()">🔄 Refresh</button>
+    <button mat-raised-button color="primary" (click)="createNGO()">➕ Create NGO</button>
+  </div>
+
+  <div class="ngos-grid" *ngIf="!loading; else loadingTemplate">
+    <mat-card *ngFor="let ngo of ngos" class="ngo-card" [ngClass]="getThemeClass(ngo.category)"
+      (click)="viewNGODetails(ngo._id)">
+      <mat-card-header>
+        <div class="header-main">
+          <mat-card-title>{{ ngo.name }}</mat-card-title>
+          <mat-card-subtitle>{{ ngo.category }}</mat-card-subtitle>
+        </div>
+        <span class="verification-status" [class.verified]="ngo.isVerified">
+          <mat-icon>{{ ngo.isVerified ? 'verified' : 'pending_actions' }}</mat-icon>
+          {{ ngo.isVerified ? 'Verified' : 'Pending' }}
+        </span>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="description">{{ ngo.description | slice:0:100 }}{{ ngo.description.length > 100 ? '...' : '' }}</p>
+        <div class="ngo-details">
+          <p><strong>Registration:</strong> {{ ngo.registrationNumber }}</p>
+          <p><strong>Admin:</strong> {{ ngo.adminId?.name || 'Manual' }} ({{ ngo.adminId?.email || 'N/A' }})</p>
+          <p><strong>Phone:</strong> {{ ngo.phone }}</p>
+          <p><strong>Email:</strong> {{ ngo.email }}</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="viewNGODetails(ngo._id); $event.stopPropagation()">View
+          Details</button>
+        <button mat-button color="accent" (click)="reviewDocs(ngo); $event.stopPropagation()">
+          <mat-icon>assignment</mat-icon>
+          Review Docs
+        </button>
+        <button mat-button [color]="ngo.isVerified ? 'warn' : 'accent'"
+          (click)="toggleVerification(ngo); $event.stopPropagation()">
+          {{ ngo.isVerified ? 'Unverify' : 'Verify' }}
+        </button>
+        <button mat-button (click)="editNGO(ngo); $event.stopPropagation()">Edit</button>
+        <button mat-button color="warn" (click)="deleteNGO(ngo._id); $event.stopPropagation()">Delete</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <ng-template #loadingTemplate>
+    <div class="loading">
+      <mat-spinner></mat-spinner>
+      <p>Loading NGOs...</p>
+    </div>
+  </ng-template>
+
+  <div *ngIf="ngos.length === 0 && !loading" class="no-ngos">
+    <p>No NGOs found</p>
+  </div>
+</div>

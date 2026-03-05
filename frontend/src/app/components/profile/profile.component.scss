@@ -1,0 +1,281 @@
+.profile-page-wrapper {
+    background-color: #f1f5f9;
+    min-height: 100vh;
+    padding: 40px 24px;
+}
+
+.profile-content-area {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.minimal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+
+    h1 {
+        font-size: 1.85rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+        letter-spacing: -0.02em;
+    }
+
+    p {
+        color: #64748b;
+        margin: 4px 0 0 0;
+        font-size: 0.95rem;
+    }
+
+    button {
+        height: 48px;
+        padding: 0 24px;
+        font-weight: 600;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+        .inline-spinner {
+            margin-right: 8px;
+        }
+
+        mat-icon {
+            margin-right: 4px;
+        }
+    }
+}
+
+.profile-layout-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 32px;
+
+    @media (max-width: 850px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// Side Column
+.info-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.user-main-card {
+    background: white;
+    padding: 32px 24px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    .avatar-edit-box {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 24px;
+        cursor: pointer;
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            object-fit: cover;
+            border: 4px solid #f8fafc;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-btn-mini {
+            position: absolute;
+            bottom: -6px;
+            right: -6px;
+            background: #4f46e5;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+            mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+
+    .user-identity {
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+        }
+
+        .user-email {
+            font-size: 0.85rem;
+            color: #64748b;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+
+            &[data-role="system_admin"] {
+                background: #fee2e2;
+                color: #991b1b;
+            }
+
+            &[data-role="ngo_admin"] {
+                background: #dcfce7;
+                color: #166534;
+            }
+
+            &[data-role="donor"] {
+                background: #e0e7ff;
+                color: #3730a3;
+            }
+        }
+    }
+
+    .account-meta {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #f1f5f9;
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+
+            mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
+
+.ngo-sidebar-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+
+    .card-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #94a3b8;
+        margin-bottom: 12px;
+        letter-spacing: 0.05em;
+    }
+
+    .ngo-item-mini {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .ngo-item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+
+            strong {
+                font-size: 0.9rem;
+                color: #0f172a;
+            }
+
+            .v-status {
+                font-size: 0.7rem;
+                font-weight: 600;
+                color: #f59e0b;
+
+                &.verified {
+                    color: #10b981;
+                }
+            }
+        }
+    }
+}
+
+// Main Column
+.settings-main {
+    .form-card {
+        background: white;
+        padding: 40px;
+        border-radius: 24px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+}
+
+.form-section {
+    margin-bottom: 32px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 24px;
+    }
+}
+
+.clean-form {
+    display: flex;
+    flex-direction: column;
+
+    .form-row {
+        margin-bottom: 16px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    mat-form-field {
+        width: 100%;
+
+        ::ng-deep .mat-mdc-text-field-wrapper {
+            background-color: #f8fafc !important;
+            border-radius: 12px !important;
+        }
+    }
+}
+
+mat-divider {
+    margin-bottom: 32px;
+}

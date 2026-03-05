@@ -1,0 +1,565 @@
+.register-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+
+  // Floating hearts background
+  .floating-hearts {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+
+    .heart {
+      position: absolute;
+      font-size: 2rem;
+      color: rgba(236, 72, 153, 0.08);
+      animation: float 8s infinite ease-in-out;
+      text-shadow: 0 0 20px rgba(236, 72, 153, 0.1);
+      z-index: 0;
+
+      @for $i from 1 through 5 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{$i * 1s};
+          animation-duration: #{6 + $i}s;
+        }
+      }
+    }
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.register-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+}
+
+// Left Hero Section
+.hero-section {
+  flex: 0 0 60%;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 60%;
+  height: calc(100vh - 70px);
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  color: white;
+  overflow: hidden;
+  z-index: 1;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
+
+  .hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    opacity: 1;
+    animation: fadeIn 1s ease-out;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.5) 0%, rgba(15, 23, 42, 0.2) 100%);
+    display: block;
+    z-index: 1;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
+
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin: 0 0 12px;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    >p {
+      font-size: 1.3rem;
+      margin: 0 0 40px;
+      opacity: 0.95;
+      font-weight: 300;
+    }
+
+    .benefits-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 40px;
+
+      li {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 20px;
+        animation: fadeInUp 0.6s ease-out backwards;
+
+        @for $i from 1 through 4 {
+          &:nth-child(#{$i}) {
+            animation-delay: #{$i * 0.1s};
+          }
+        }
+
+        .benefit-icon {
+          flex-shrink: 0;
+          width: 50px;
+          height: 50px;
+          background: rgba(255, 255, 255, 0.15);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+
+          mat-icon {
+            color: white;
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+        .benefit-text {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          strong {
+            font-weight: 700;
+            font-size: 0.95rem;
+          }
+
+          span {
+            font-size: 0.85rem;
+            opacity: 0.85;
+          }
+        }
+      }
+    }
+
+    .stats {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+
+        .stat-number {
+          font-size: 1.5rem;
+          font-weight: 800;
+        }
+
+        .stat-label {
+          font-size: 0.75rem;
+          opacity: 0.8;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+      }
+    }
+  }
+}
+}
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Right Form Section
+.form-section {
+  flex: 0 0 40%;
+  margin-left: 60%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px 32px 100px 8px;
+  background: #fff;
+  min-height: auto;
+  overflow-y: auto;
+
+  @media (max-width: 1024px) {
+    flex: 1;
+    padding: 30px 20px;
+    height: auto;
+    min-height: calc(100vh - 70px);
+  }
+
+  .register-card {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1.5px solid #ec4899;
+    overflow: hidden;
+    animation: slideInUp 0.6s ease-out;
+    padding: 40px 48px;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .form-header {
+    padding: 40px 48px 28px !important;
+    border-bottom: 1px solid rgba(100, 116, 139, 0.08);
+
+    .header-top {
+      text-align: center;
+      margin-bottom: 24px;
+
+      mat-card-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0 !important;
+        letter-spacing: -1px;
+        line-height: 1.2;
+      }
+
+      mat-card-subtitle {
+        font-size: 14px;
+        color: #64748b;
+        margin-top: 8px !important;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+    }
+
+    .role-selector {
+      display: flex;
+      gap: 12px;
+
+      button {
+        flex: 1;
+        height: 44px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border: 2px solid #e2e8f0;
+        color: #64748b;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+
+        &:hover {
+          border-color: #cbd5e1;
+          background: #f8fafc;
+        }
+
+        &.active {
+          border-color: #ec4899;
+          background: rgba(236, 72, 153, 0.1);
+          color: #ec4899;
+          box-shadow: 0 4px 12px rgba(236, 72, 153, 0.15);
+
+          &:hover {
+            background: rgba(236, 72, 153, 0.15);
+          }
+        }
+      }
+    }
+  }
+
+  mat-card-content {
+    padding: 32px !important;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    &.full-width {
+      grid-template-columns: 1fr;
+    }
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  mat-form-field {
+    display: block;
+
+    &.full-width {
+      grid-column: 1 / -1;
+    }
+
+    ::ng-deep {
+      .mdc-text-field {
+        border-radius: 10px;
+        background-color: white;
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover:not(.mdc-text-field--disabled):not(.mdc-text-field--focused) {
+          border-color: #cbd5e1;
+          background-color: #f8fafc;
+        }
+
+        &.mdc-text-field--focused {
+          border-color: #ec4899;
+          background-color: white;
+          box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
+        }
+
+        &.mdc-text-field--invalid:not(.mdc-text-field--focused) {
+          border-color: #ef4444;
+          background-color: rgba(239, 68, 68, 0.02);
+        }
+      }
+
+      .mat-mdc-floating-label {
+        color: #475569 !important;
+        font-weight: 500;
+      }
+
+      .mdc-floating-label--float-above {
+        color: #ec4899 !important;
+        font-weight: 600;
+      }
+
+      .mat-mdc-prefix {
+        color: #94a3b8;
+        margin-right: 12px;
+      }
+
+      .mat-mdc-form-field-error {
+        font-size: 0.75rem;
+        color: #ef4444;
+        margin-top: 6px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .terms-checkbox {
+    margin: 16px 0;
+    font-size: 0.9rem;
+
+    ::ng-deep {
+      .mdc-checkbox__native-control {
+        &:checked~.mdc-checkbox__background {
+          background-color: #ec4899;
+          border-color: #ec4899;
+        }
+      }
+    }
+
+    a {
+      color: #ec4899;
+      text-decoration: none;
+      font-weight: 600;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .checkbox-error {
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin: -12px 0 12px;
+    display: block;
+  }
+
+  .register-btn {
+    margin: 20px 0 16px;
+    height: 48px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.3px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    .btn-heart {
+      animation: heartBeat 0.6s ease-out;
+    }
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 8px 25px rgba(236, 72, 153, 0.4);
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+
+  .login-link {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #64748b;
+
+    .link {
+      color: #ec4899;
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #c2185b;
+      }
+    }
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heartBeat {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.3);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+}
+
+// Scrollbar styling
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.3);
+  border-radius: 4px;
+
+  &:hover {
+    background: rgba(100, 116, 139, 0.5);
+  }
+}

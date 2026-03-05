@@ -1,0 +1,113 @@
+<div class="admin-users-container">
+  <div class="header-section">
+    <div class="title-area">
+      <h1>User Management</h1>
+      <p class="subtitle">Manage and monitor all platform users</p>
+    </div>
+    <div class="stats-grid">
+      <mat-card class="stat-card total">
+        <mat-card-content>
+          <div class="stat-icon"><mat-icon>people</mat-icon></div>
+          <div class="stat-info">
+            <span class="stat-label">Total Users</span>
+            <span class="stat-value">{{ stats.total }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card admin">
+        <mat-card-content>
+          <div class="stat-icon"><mat-icon>admin_panel_settings</mat-icon></div>
+          <div class="stat-info">
+            <span class="stat-label">Admins</span>
+            <span class="stat-value">{{ stats.admins }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card ngo">
+        <mat-card-content>
+          <div class="stat-icon"><mat-icon>corporate_fare</mat-icon></div>
+          <div class="stat-info">
+            <span class="stat-label">NGOs</span>
+            <span class="stat-value">{{ stats.ngos }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card donor">
+        <mat-card-content>
+          <div class="stat-icon"><mat-icon>volunteer_activism</mat-icon></div>
+          <div class="stat-info">
+            <span class="stat-label">Donors</span>
+            <span class="stat-value">{{ stats.donors }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="actions-bar">
+    <div class="search-box">
+      <mat-form-field appearance="outline">
+        <mat-label>Search users by name, email or role...</mat-label>
+        <input matInput [(ngModel)]="searchQuery" (input)="applyFilter()" placeholder="e.g. John Doe">
+        <mat-icon matPrefix>search</mat-icon>
+        <button *ngIf="searchQuery" matSuffix mat-icon-button (click)="searchQuery=''; applyFilter()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <button mat-fab extended color="primary" (click)="loadUsers()" [disabled]="loading" class="refresh-btn">
+      <mat-icon [class.spinning]="loading">refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  <div class="users-grid" *ngIf="!loading; else loadingTemplate">
+    <mat-card *ngFor="let user of filteredUsers" class="user-card"
+      [style.background-color]="getUserPastel(user).bg + '10'">
+      <div class="card-header-accent" [style.background-color]="getUserPastel(user).bg"></div>
+      <mat-card-header>
+        <div mat-card-avatar class="user-avatar" [style.background-color]="getUserPastel(user).bg"
+          [style.color]="getUserPastel(user).text">
+          {{ getInitials(user.name) }}
+        </div>
+        <mat-card-title>{{ user.name }}</mat-card-title>
+        <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-row">
+          <mat-icon [style.color]="getUserPastel(user).text">badge</mat-icon>
+          <span class="role-badge" [style.background-color]="getUserPastel(user).bg"
+            [style.color]="getUserPastel(user).text">
+            {{ user.role | uppercase }}
+          </span>
+        </div>
+        <div class="info-row">
+          <mat-icon>phone</mat-icon>
+          <span>{{ user.phone || 'Not provided' }}</span>
+        </div>
+        <div class="info-row">
+          <mat-icon>calendar_today</mat-icon>
+          <span>Joined {{ user.createdAt | date:'mediumDate' }}</span>
+        </div>
+      </mat-card-content>
+      <mat-divider></mat-divider>
+      <mat-card-actions align="end">
+        <button mat-button color="primary" (click)="viewProfile(user)">VIEW PROFILE</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <ng-template #loadingTemplate>
+    <div class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Fetching user data...</p>
+    </div>
+  </ng-template>
+
+  <div *ngIf="filteredUsers.length === 0 && !loading" class="empty-state">
+    <mat-icon>person_search</mat-icon>
+    <h3>No users found</h3>
+    <p>Try adjusting your search criteria or refresh the list.</p>
+    <button mat-button color="primary" (click)="searchQuery=''; applyFilter()">Clear Search</button>
+  </div>
+</div>

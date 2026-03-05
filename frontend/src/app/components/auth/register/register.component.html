@@ -1,0 +1,158 @@
+<div class="modern-register-container">
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="register-layout">
+    <!-- Left Side - Hero Section -->
+    <div class="hero-section">
+      <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2070&auto=format&fit=crop"
+        alt="Join HeartBridge community" class="hero-image">
+
+      <div class="hero-content">
+        <div class="brand-identity fade-in-up">
+          <h1>Make a Real <br><span class="highlight">Impact</span>.</h1>
+          <p class="tagline">Sign up to support causes you care about and help local organizations thrive.</p>
+        </div>
+
+        <div class="impact-highlights delay-1">
+          <div class="highlight-item">
+            <mat-icon>volunteer_activism</mat-icon>
+            <span>Seamless Giving</span>
+          </div>
+          <div class="highlight-item">
+            <mat-icon>group_add</mat-icon>
+            <span>NGO Networking</span>
+          </div>
+          <div class="highlight-item">
+            <mat-icon>verified_user</mat-icon>
+            <span>Trusted Platform</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="form-section">
+      <div class="form-container">
+        <div class="form-header">
+          <div class="form-brand">
+            <span>HeartBridge</span>
+          </div>
+          <p class="login-prompt">Already a member? <a routerLink="/login">Log in here</a></p>
+          <h2>Create Account</h2>
+        </div>
+
+        <!-- Form -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="modern-form">
+          <div class="form-row">
+            <div class="input-wrapper">
+              <label>Full Name</label>
+              <div class="input-field">
+                <input type="text" id="register-name" name="fullname" formControlName="name" placeholder="Full Name"
+                  autocomplete="name" required>
+                <mat-icon>person_outline</mat-icon>
+              </div>
+            </div>
+
+            <div class="input-wrapper">
+              <label>Role</label>
+              <div class="input-field">
+                <select formControlName="role" required>
+                  <option value="" disabled selected>Select your role</option>
+                  <option value="donor">Donor</option>
+                  <option value="ngo_admin">NGO Admin</option>
+                </select>
+                <mat-icon>how_to_reg</mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-wrapper">
+              <label>Email Address</label>
+              <div class="input-field">
+                <input type="email" id="register-email" name="email" formControlName="email"
+                  placeholder="donor@heartbridge.com" autocomplete="email" required>
+                <mat-icon>mail_outline</mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- NGO fields (conditional) -->
+          <ng-container *ngIf="registerForm.get('role')?.value === 'ngo_admin'">
+            <div class="form-row">
+              <div class="input-wrapper">
+                <label>NGO Name</label>
+                <div class="input-field">
+                  <input type="text" id="register-ngo-name" name="ngoName" formControlName="ngoName"
+                    placeholder="Organization Name" autocomplete="organization" required>
+                  <mat-icon>account_balance</mat-icon>
+                </div>
+              </div>
+
+              <div class="input-wrapper">
+                <label>Registration Number</label>
+                <div class="input-field">
+                  <input type="text" id="register-ngo-reg" name="registrationNumber"
+                    formControlName="registrationNumber" placeholder="REG-12345" required>
+                  <mat-icon>verified</mat-icon>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <div class="form-row">
+            <div class="input-wrapper">
+              <label>Password</label>
+              <div class="input-field">
+                <input [type]="showPassword ? 'text' : 'password'" id="register-password" name="password"
+                  formControlName="password" placeholder="Min 6 characters" autocomplete="new-password" required>
+                <mat-icon>lock_outline</mat-icon>
+              </div>
+            </div>
+
+            <div class="input-wrapper">
+              <label>Confirm Password</label>
+              <div class="input-field">
+                <input [type]="showPassword ? 'text' : 'password'" id="register-confirm-password" name="confirmPassword"
+                  formControlName="confirmPassword" placeholder="Repeat password" autocomplete="new-password" required>
+                <mat-icon>verified_user</mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-wrapper">
+              <label>Phone Number</label>
+              <div class="input-field">
+                <input type="tel" id="register-phone" name="phone" formControlName="phone"
+                  placeholder="+91 000 000 0000" autocomplete="tel">
+                <mat-icon>phone_iphone</mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <mat-checkbox formControlName="terms" color="primary">
+              I agree to the <a href="#" (click)="$event.preventDefault()">Terms of Service</a> and <a href="#"
+                (click)="$event.preventDefault()">Privacy Policy</a>
+            </mat-checkbox>
+          </div>
+
+          <button mat-raised-button type="submit" class="register-btn" [disabled]="loading || registerForm.invalid">
+            <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+            <span *ngIf="!loading">Join HeartBridge</span>
+          </button>
+
+          <div class="form-bottom-text">
+            By engaging, you accept our <a href="#">Terms</a> & <a href="#">Privacy</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

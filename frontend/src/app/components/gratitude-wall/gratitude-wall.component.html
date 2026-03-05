@@ -1,0 +1,88 @@
+<div class="gratitude-wall-container">
+  <div class="page-header">
+    <h1>Gratitude Wall</h1>
+    <p class="subtitle">Messages of thanks from NGOs to their supporters</p>
+  </div>
+
+  <!-- Post Gratitude Button for NGO Admins -->
+  <div class="post-gratitude-section" *ngIf="canPostGratitude()">
+    <button mat-raised-button color="accent" (click)="togglePostForm()" *ngIf="!showPostForm">
+      <mat-icon>add_circle</mat-icon>
+      Post a Thank You Message
+    </button>
+
+    <!-- Post Form -->
+    <mat-card class="post-form-card" *ngIf="showPostForm">
+      <mat-card-header>
+        <mat-card-title>Share Your Gratitude</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="gratitudeForm">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" placeholder="Brief title for your message">
+            <mat-error *ngIf="gratitudeForm.get('title')?.hasError('required')">Title is required</mat-error>
+            <mat-error *ngIf="gratitudeForm.get('title')?.hasError('minlength')">Title must be at least 5
+              characters</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Message</mat-label>
+            <textarea matInput formControlName="message" placeholder="Share your thank you message..."
+              rows="6"></textarea>
+            <mat-error *ngIf="gratitudeForm.get('message')?.hasError('required')">Message is required</mat-error>
+            <mat-error *ngIf="gratitudeForm.get('message')?.hasError('minlength')">Message must be at least 10
+              characters</mat-error>
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button (click)="togglePostForm()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="postGratitude()"
+          [disabled]="gratitudeForm.invalid || postingMessage">
+          <mat-icon *ngIf="!postingMessage">send</mat-icon>
+          <mat-spinner *ngIf="postingMessage" diameter="20"></mat-spinner>
+          {{ postingMessage ? 'Posting...' : 'Post Message' }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Login prompt for non-logged-in users -->
+  <div class="login-prompt" *ngIf="!isLoggedIn">
+    <mat-card class="info-card">
+      <mat-card-content>
+        <p><mat-icon>info</mat-icon> Only NGO Admins can post gratitude messages. Please <a
+            routerLink="/login">login</a> to post.</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-spinner *ngIf="loading" class="spinner"></mat-spinner>
+
+  <div class="messages-container" *ngIf="!loading">
+    <mat-card *ngFor="let message of messages" class="gratitude-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="heart-icon">favorite</mat-icon>
+          {{ message.title }}
+        </mat-card-title>
+        <mat-card-subtitle>{{ message.ngoId?.name }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ message.message }}</p>
+        <div class="card-footer">
+          <div class="date">
+            <mat-icon>schedule</mat-icon>
+            <span>{{ message.createdAt | date }}</span>
+          </div>
+          <button mat-icon-button (click)="shareGratitude(message)" matTooltip="Share this gratitude">
+            <mat-icon>share</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <p *ngIf="!loading && messages.length === 0" class="no-results">No gratitude messages yet.</p>
+</div>

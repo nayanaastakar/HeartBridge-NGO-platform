@@ -1,0 +1,157 @@
+<div class="admin-donations-container">
+  <div class="header-section">
+    <div class="title-area">
+      <h1>Donation Oversight</h1>
+      <p class="subtitle">Monitor and verify all financial contributions across the platform</p>
+    </div>
+    <div class="stats-grid">
+      <mat-card class="stat-card revenue">
+        <mat-card-content>
+          <div class="stat-icon"><mat-icon>payments</mat-icon></div>
+          <div class="stat-info">
+            <span class="stat-label">Total Revenue</span>
+            <span class="stat-value">₹{{ stats.totalAmount | number:'1.0-0' }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card count">
+        <mat-card-content>
+          <div class="stat-icon"><mat-icon>receipt_long</mat-icon></div>
+          <div class="stat-info">
+            <span class="stat-label">Total Transactions</span>
+            <span class="stat-value">{{ stats.count }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card average">
+        <mat-card-content>
+          <div class="stat-icon"><mat-icon>analytics</mat-icon></div>
+          <div class="stat-info">
+            <span class="stat-label">Avg. Donation</span>
+            <span class="stat-value">₹{{ stats.average | number:'1.0-0' }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card today">
+        <mat-card-content>
+          <div class="stat-icon"><mat-icon>today</mat-icon></div>
+          <div class="stat-info">
+            <span class="stat-label">Donations Today</span>
+            <span class="stat-value">{{ stats.todayCount }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="actions-bar">
+    <div class="filters-container">
+      <div class="search-box">
+        <mat-form-field appearance="outline">
+          <mat-label>Search donor, NGO or transaction ID...</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (input)="applyFilters()" placeholder="e.g. TXN-123456">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+      </div>
+      <div class="type-filter">
+        <mat-form-field appearance="outline">
+          <mat-label>Donation Type</mat-label>
+          <mat-select [(ngModel)]="selectedType" (selectionChange)="applyFilters()">
+            <mat-option value="all">All Types</mat-option>
+            <mat-option value="general">NGO Support</mat-option>
+            <mat-option value="wish">Wish Box</mat-option>
+            <mat-option value="emergency">Emergency Fund</mat-option>
+            <mat-option value="adopt_a_day">Adopt-a-Day</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <button mat-fab extended color="primary" (click)="loadDonations()" [disabled]="loading" class="refresh-btn">
+      <mat-icon [class.spinning]="loading">refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  <div class="table-container mat-elevation-z2" *ngIf="!loading; else loadingTemplate">
+    <table mat-table [dataSource]="filteredDonations">
+      <!-- ID Column -->
+      <ng-container matColumnDef="receipt">
+        <th mat-header-cell *matHeaderCellDef>Transaction ID</th>
+        <td mat-cell *matCellDef="let donation">
+          <div class="payment-id clickable" (click)="downloadReceipt(donation)" matTooltip="Click to download receipt">
+            <span class="id-text">#{{ donation.transactionId || 'DMN-' + donation._id?.substring(0,8).toUpperCase()
+              }}</span>
+            <mat-icon class="mini-download">download</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Donor Column -->
+      <ng-container matColumnDef="donor">
+        <th mat-header-cell *matHeaderCellDef>Donor</th>
+        <td mat-cell *matCellDef="let donation">
+          <div class="user-info">
+            <div class="avatar-mini">{{ donation.donorId?.name?.charAt(0) || 'D' }}</div>
+            <div class="name-box">
+              <span class="primary-text">{{ donation.donorId?.name || 'Anonymous' }}</span>
+              <span class="secondary-text">{{ donation.donorId?.email || '-' }}</span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- NGO Column -->
+      <ng-container matColumnDef="ngo">
+        <th mat-header-cell *matHeaderCellDef>To Organization</th>
+        <td mat-cell *matCellDef="let donation">
+          <div class="ngo-box">
+            <mat-icon [style.color]="getTypeColor(donation.donationType)">{{ getTypeIcon(donation.donationType)
+              }}</mat-icon>
+            <span>{{ donation.ngoId?.name || 'N/A' }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Amount Column -->
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Amount</th>
+        <td mat-cell *matCellDef="let donation">
+          <span class="amount-text">₹{{ donation.amount | number:'1.2-2' }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date & Time</th>
+        <td mat-cell *matCellDef="let donation">
+          <div class="date-box">
+            <span class="primary-text">{{ donation.createdAt | date:'mediumDate' }}</span>
+            <span class="secondary-text">{{ donation.createdAt | date:'shortTime' }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['receipt', 'donor', 'ngo', 'amount', 'date']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['receipt', 'donor', 'ngo', 'amount', 'date'];" class="donation-row">
+      </tr>
+    </table>
+
+    <div *ngIf="filteredDonations.length === 0" class="empty-results">
+      <mat-icon>search_off</mat-icon>
+      <p>No transactions match your search</p>
+    </div>
+  </div>
+
+  <ng-template #loadingTemplate>
+    <div class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Fetching transaction records...</p>
+    </div>
+  </ng-template>
+
+  <div *ngIf="donations.length === 0 && !loading" class="empty-state">
+    <mat-icon>no_accounts</mat-icon>
+    <h3>No Donations Recorded</h3>
+    <p>Wait for donors to contribute to the cause.</p>
+  </div>
+</div>

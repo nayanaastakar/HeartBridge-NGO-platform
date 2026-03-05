@@ -1,0 +1,208 @@
+<div class="ngo-dashboard-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading NGO dashboard...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loading && !ngo._id" class="error-container">
+    <mat-card>
+      <mat-card-content>
+        <h3>Unable to Load NGO Data</h3>
+        <p>Please make sure you are logged in as an NGO administrator.</p>
+        <button mat-raised-button color="primary" (click)="refresh()">Retry</button>
+        <button mat-stroked-button routerLink="/login">Login</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Main Dashboard -->
+  <div *ngIf="!loading && ngo._id">
+    <div class="ngo-welcome-banner minimal-welcome">
+      <div class="ngo-logo-wrapper">
+        <img [src]="ngoService.getFullImageUrl(ngo.logo)" alt="NGO Logo" class="current-logo"
+          (error)="onImageError($event)">
+        <button mat-mini-fab color="primary" class="edit-logo-btn" (click)="logoInput.click()" matTooltip="Change Logo">
+          <mat-icon>edit_square</mat-icon>
+        </button>
+        <input #logoInput type="file" (change)="onLogoSelected($event)" accept="image/*" style="display:none">
+      </div>
+      <div class="welcome-text-wrapper">
+        <h1 style="margin:0; display: flex; align-items: center; gap: 8px;">
+          {{ ngo.name || 'Unknown NGO' }}
+          <mat-icon *ngIf="ngo.isVerified" style="color: white;" matTooltip="Verified NGO">verified</mat-icon>
+        </h1>
+        <p class="ngo-subtitle">{{ ngo.category }}</p>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-bottom:16px;">
+      <button mat-stroked-button color="accent" [routerLink]="['/ngo', ngo._id]" *ngIf="ngo._id">
+        <mat-icon>visibility</mat-icon>
+        Public Preview
+      </button>
+      <button mat-stroked-button color="primary" (click)="refresh()" [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+
+    <!-- Verification Journey -->
+    <mat-card *ngIf="!ngo.isVerified" class="verification-journey-card">
+      <mat-card-header>
+        <mat-card-title>Your Verification Journey</mat-card-title>
+        <mat-card-subtitle>Complete these steps to unlock full platform features</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="journey-steps">
+          <div class="step completed">
+            <mat-icon class="step-icon">check_circle</mat-icon>
+            <div class="step-content">
+              <h4>Register NGO</h4>
+              <p>Account created & linked</p>
+            </div>
+          </div>
+          <div class="step" [class.completed]="ngo.verificationDocuments?.length > 0">
+            <mat-icon class="step-icon">{{ ngo.verificationDocuments?.length > 0 ? 'check_circle' : 'circle' }}
+            </mat-icon>
+            <div class="step-content">
+              <h4>Upload Proof</h4>
+              <p>{{ ngo.verificationDocuments?.length > 0 ? 'Documents uploaded' : 'Upload registration certificate' }}
+              </p>
+              <button mat-button color="primary" (click)="docInput.click()" *ngIf="!ngo.verificationDocuments?.length">
+                Upload Now
+              </button>
+              <input #docInput type="file" (change)="uploadDocs($event)" accept=".pdf,.doc,.docx,image/*"
+                style="display:none">
+            </div>
+          </div>
+          <div class="step">
+            <mat-icon class="step-icon">hourglass_top</mat-icon>
+            <div class="step-content">
+              <h4>Admin Review</h4>
+              <p>Our team is verifying your details</p>
+            </div>
+          </div>
+          <div class="step">
+            <mat-icon class="step-icon">verified</mat-icon>
+            <div class="step-content">
+              <h4>Go Live</h4>
+              <p>Accept donations & post stories</p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="stats-grid">
+      <mat-card>
+        <mat-card-title>Total Received</mat-card-title>
+        <mat-card-content>
+          <h2>{{ dashboardData.donations?.totalAmount || 0 | currency:'INR':'symbol':'1.0-0' }}</h2>
+          <p>{{ dashboardData.donations?.count || 0 }} donations</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Active Wishes</mat-card-title>
+        <mat-card-content>
+          <h2>{{ dashboardData.wishes?.length || 0 }}</h2>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Emergency Funds</mat-card-title>
+        <mat-card-content>
+          <h2>{{ dashboardData.emergencyFunds?.length || 0 }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <mat-card class="actions-card">
+      <mat-card-header>
+        <mat-card-title>Quick Actions</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-raised-button color="primary" routerLink="/wishes">
+          <mat-icon>auto_awesome</mat-icon>
+          Create Wish
+        </button>
+        <button mat-raised-button color="accent" routerLink="/emergency-funds">
+          <mat-icon>emergency_share</mat-icon>
+          Create Emergency Fund
+        </button>
+        <button mat-raised-button class="adopt-btn" routerLink="/adopt-a-day">
+          <mat-icon>calendar_month</mat-icon>
+          Add Adopt-a-Day
+        </button>
+        <button mat-raised-button class="gratitude-btn" routerLink="/gratitude-wall">
+          <mat-icon>favorite</mat-icon>
+          Post Gratitude
+        </button>
+        <button mat-raised-button color="primary" (click)="openAddStoryDialog()">
+          <mat-icon>auto_fix_high</mat-icon>
+          Post Impact Story
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Impact Stories Management -->
+    <div class="section-container" style="margin-top: 24px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h2>My Impact Stories</h2>
+      </div>
+
+      <mat-card>
+        <mat-card-content>
+          <div *ngIf="impactStories.length === 0" style="padding: 20px; text-align: center; color: #666;">
+            <p>You haven't posted any impact stories yet.</p>
+            <button mat-stroked-button color="primary" (click)="openAddStoryDialog()">Create First Story</button>
+          </div>
+
+          <table mat-table [dataSource]="impactStories" *ngIf="impactStories.length > 0" style="width: 100%;">
+
+            <!-- Image Column -->
+            <ng-container matColumnDef="image">
+              <th mat-header-cell *matHeaderCellDef> Image </th>
+              <td mat-cell *matCellDef="let story">
+                <img [src]="story.afterPhoto?.url || story.beforePhoto?.url || 'assets/placeholder.jpg'"
+                  style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;"
+                  (error)="onImageError($event)">
+              </td>
+            </ng-container>
+
+            <!-- Title Column -->
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef> Title </th>
+              <td mat-cell *matCellDef="let story"> {{story.title}} </td>
+            </ng-container>
+
+            <!-- Stats Column -->
+            <ng-container matColumnDef="stats">
+              <th mat-header-cell *matHeaderCellDef> Impact </th>
+              <td mat-cell *matCellDef="let story">
+                <small>{{story.impact?.beneficiariesReached}} Beneficiaries</small><br>
+                <small>₹{{story.fundingDetails?.amountRaised}} Raised</small>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Actions </th>
+              <td mat-cell *matCellDef="let story">
+                <button mat-icon-button color="primary" (click)="openEditStoryDialog(story)" matTooltip="Edit">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteStory(story._id)" matTooltip="Delete">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['image', 'title', 'stats', 'actions']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['image', 'title', 'stats', 'actions'];"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>

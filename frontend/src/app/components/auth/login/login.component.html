@@ -1,0 +1,114 @@
+<div class="modern-login-container">
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="login-layout">
+    <!-- Left Side - Modern Hero with Indian Imagery -->
+    <div class="hero-section">
+      <div class="hero-visual">
+        <img src="assets/images/auth/login-hero.png" alt="HeartBridge Impact - Every Smile Matters" class="hero-image">
+        <div class="image-overlay"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="brand-identity fade-in-up">
+          <h1>Support Local <br><span class="highlight">Causes</span>.</h1>
+          <p class="tagline">Join a trusted network of donors and vetted NGOs making an impact across India.</p>
+        </div>
+
+        <div class="impact-highlights delay-1">
+          <div class="highlight-item">
+            <mat-icon>verified</mat-icon>
+            <span>Vetted Organizations</span>
+          </div>
+          <div class="highlight-item">
+            <mat-icon>security</mat-icon>
+            <span>Secure Philanthropy</span>
+          </div>
+          <div class="highlight-item">
+            <mat-icon>insights</mat-icon>
+            <span>Impact Tracking</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Modern Login Form -->
+    <div class="form-section">
+      <div class="form-container">
+        <!-- Header -->
+        <div class="form-header">
+          <div class="form-brand">
+            <span>HeartBridge</span>
+          </div>
+          <h2>Welcome Back</h2>
+          <p>Continue your mission of making a difference</p>
+        </div>
+
+        <!-- Form -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="modern-form">
+          <!-- Email Input -->
+          <div class="input-wrapper">
+            <label>Email</label>
+            <div class="input-field">
+              <input type="email" id="login-email" name="login_email" placeholder="you@example.com"
+                formControlName="email" autocomplete="email" required>
+              <mat-icon>mail_outline</mat-icon>
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="input-wrapper">
+            <label>Password</label>
+            <div class="input-field">
+              <input [type]="showPassword ? 'text' : 'password'" id="login-password" name="login_password"
+                placeholder="Enter password" formControlName="password" autocomplete="current-password" required>
+              <mat-icon>lock_outline</mat-icon>
+            </div>
+          </div>
+
+          <!-- Remember & Forgot -->
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" formControlName="rememberMe">
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-password" (click)="forgotPassword($event)">Forgot password?</a>
+          </div>
+
+          <!-- Login Button -->
+          <button type="submit" class="modern-btn primary-btn" [disabled]="loginForm.invalid || loading">
+            <span *ngIf="!loading">Sign In with Heart</span>
+            <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+          </button>
+
+          <!-- Divider -->
+          <div class="divider">
+            <span>or continue with</span>
+          </div>
+
+          <!-- Social Buttons -->
+          <div class="social-buttons">
+            <button type="button" class="social-btn google-btn" (click)="signInWithGoogle()">
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20">
+              <span>Continue with Google</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Sign Up Link -->
+        <div class="form-footer">
+          <p>New to HeartBridge? <a routerLink="/register" class="link">Create account</a></p>
+          <div class="admin-portal-link">
+            <mat-icon>security</mat-icon>
+            <a routerLink="/admin-login">Go to Admin Portal</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

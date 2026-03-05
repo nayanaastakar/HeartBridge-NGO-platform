@@ -1,0 +1,96 @@
+<div class="admin-dashboard-container">
+  <div class="admin-welcome-banner">
+    <h1>System Admin Dashboard 🛡️</h1>
+    <p class="admin-subtitle">Manage platform users, NGOs, and monitor all activity</p>
+  </div>
+
+  <div style="display:flex; justify-content:flex-end; margin-bottom: 24px;">
+    <button mat-raised-button color="accent" routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      My Profile
+    </button>
+  </div>
+
+  <!-- Platform Statistics -->
+  <div class="section">
+    <h2>Platform Overview</h2>
+    <div class="stats-grid">
+      <mat-card>
+        <mat-card-title>Total Donations</mat-card-title>
+        <mat-card-content>
+          <h2>₹{{ (platformStats.donations?.totalAmount || 0) | number:'1.0-0' }}</h2>
+          <p>{{ (platformStats.donations?.count || 0) | number }} transactions</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Total Donors</mat-card-title>
+        <mat-card-content>
+          <h2>{{ (platformStats.donors || 0) | number }}</h2>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Total NGOs</mat-card-title>
+        <mat-card-content>
+          <h2>{{ (platformStats.ngos || 0) | number }}</h2>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Active Wishes</mat-card-title>
+        <mat-card-content>
+          <h2>{{ (platformStats.wishes || 0) | number }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Admin Actions -->
+  <div class="section">
+    <h2>Administrative Functions</h2>
+    <div class="actions-grid">
+      <mat-card class="action-card" (click)="viewAllUsers()">
+        <mat-card-title>👥 User Management</mat-card-title>
+        <mat-card-content>
+          <p>View and manage all platform users</p>
+          <button mat-raised-button color="primary">Manage Users</button>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="action-card" (click)="viewAllNGOs()">
+        <mat-card-title>🏢 NGO Management</mat-card-title>
+        <mat-card-content>
+          <p>View, create, and manage NGOs</p>
+          <button mat-raised-button color="primary">Manage NGOs</button>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="action-card" (click)="viewAllDonations()">
+        <mat-card-title>💰 Donation Oversight</mat-card-title>
+        <mat-card-content>
+          <p>View all platform donations</p>
+          <button mat-raised-button color="primary">View Donations</button>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="action-card" (click)="createAdmin()">
+        <mat-card-title>🔐 Create Admin</mat-card-title>
+        <mat-card-content>
+          <p>Create new system administrator</p>
+          <button mat-raised-button color="warn">Create Admin</button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="section">
+    <h2>Quick Actions</h2>
+    <div class="quick-actions">
+      <button mat-raised-button (click)="refreshStats()">🔄 Refresh Stats</button>
+      <button mat-raised-button color="accent" (click)="openAnalytics()">📊 Analytics Dashboard</button>
+      <button mat-raised-button color="warn" (click)="systemMaintenance()">🔧 System Maintenance</button>
+    </div>
+  </div>
+</div>

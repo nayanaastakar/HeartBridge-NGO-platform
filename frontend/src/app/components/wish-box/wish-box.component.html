@@ -1,0 +1,183 @@
+<div class="wish-box-container">
+  <div class="page-header">
+    <h1>Wish Box</h1>
+    <p class="subtitle">Help fulfill wishes for special occasions</p>
+  </div>
+
+  <div *ngIf="isNGOAdmin" class="ngo-admin-section">
+    <button mat-raised-button color="primary" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Cancel' : 'Create New Wish' }}
+    </button>
+
+    <mat-card *ngIf="showCreateForm" class="create-form-card">
+      <mat-card-header>
+        <mat-card-title>{{ editingWish ? 'Edit Wish' : 'Create a New Wish' }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="createForm" (ngSubmit)="submitWish()">
+          <mat-form-field appearance="fill">
+            <mat-label>Wish Title</mat-label>
+            <input matInput formControlName="title" placeholder="e.g., School Supplies for Children">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="4"
+              placeholder="Describe the wish in detail"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Occasion</mat-label>
+            <input matInput formControlName="occasion" placeholder="e.g., Back to School">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Required Amount (₹)</mat-label>
+            <input matInput formControlName="requiredAmount" type="number" placeholder="Amount needed">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Deadline</mat-label>
+            <input matInput formControlName="deadline" type="date">
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="submitting">
+              {{ submitting ? (editingWish ? 'Updating...' : 'Creating...') : (editingWish ? 'Update Wish' : 'Create
+              Wish') }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="filters">
+    <button mat-button [class.active]="statusFilter === 'ACTIVE'" (click)="filterByStatus('ACTIVE')">Active</button>
+    <button mat-button [class.active]="statusFilter === 'FULFILLED'"
+      (click)="filterByStatus('FULFILLED')">Fulfilled</button>
+    <button mat-button [class.active]="statusFilter === 'EXPIRED'" (click)="filterByStatus('EXPIRED')">Expired</button>
+  </div>
+
+  <mat-spinner *ngIf="loading" class="spinner"></mat-spinner>
+
+  <div class="card-container" *ngIf="!loading">
+    <mat-card *ngFor="let wish of wishes" class="wish-card" [class.personal-grid-card]="isPersonalWish(wish)"
+      [class.ngo-grid-card]="isNGOWish(wish)">
+      <mat-card-header>
+        <div class="wish-badges">
+          <span *ngIf="isPersonalWish(wish)" class="badge personal-badge">
+            <mat-icon>person</mat-icon> Personal Wish
+          </span>
+          <span *ngIf="isNGOWish(wish)" class="badge ngo-badge">
+            <mat-icon>business</mat-icon> NGO Common Wish
+          </span>
+        </div>
+        <mat-card-title>{{ wish.title }}</mat-card-title>
+        <mat-card-subtitle>{{ wish.ngoId?.name }} - {{ wish.occasion }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ wish.description }}</p>
+        <div class="progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="(wish.collectedAmount / wish.requiredAmount * 100)"></div>
+          </div>
+          <div class="progress-text">
+            <span class="collected">₹{{ wish.collectedAmount | number }} <small>/ ₹{{ wish.requiredAmount | number
+                }}</small></span>
+            <span class="percentage">{{ (wish.collectedAmount / wish.requiredAmount * 100) | number:'1.0-0' }}%</span>
+          </div>
+        </div>
+        <div class="deadline">
+          <mat-icon>history</mat-icon>
+          <span>Expires {{ wish.deadline | date:'mediumDate' }}</span>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button class="donate-btn" (click)="openDonationModal(wish)" *ngIf="!isNGOAdmin">
+          <mat-icon>volunteer_activism</mat-icon> Support This Wish
+        </button>
+
+        <div class="admin-actions" *ngIf="canManageWish(wish)">
+          <button mat-stroked-button color="primary" (click)="editWish(wish)">
+            <mat-icon>edit</mat-icon> Edit
+          </button>
+          <button mat-stroked-button color="warn" (click)="deleteWish(wish)">
+            <mat-icon>delete_outline</mat-icon> Remove
+          </button>
+        </div>
+        <span class="spacer"></span>
+        <button mat-icon-button (click)="shareWish(wish)" matTooltip="Share this wish">
+          <mat-icon>share</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <p *ngIf="!loading && wishes.length === 0" class="no-results">No wishes found.</p>
+</div>
+
+<!-- Thank You Modal Overlay -->
+<div class="thank-you-overlay" *ngIf="showThankYou">
+  <div class="confetti-container">
+    <div class="confetti" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]"></div>
+  </div>
+  <div class="thank-you-card">
+    <button mat-icon-button class="close-btn" (click)="closeThankYou()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div class="success-icon-wrapper">
+      <mat-icon>favorite</mat-icon>
+    </div>
+    <h2>Thank You!</h2>
+    <p class="amount-text">You donated ₹{{ lastDonationAmount | number }}</p>
+    <p class="message-text">Your generosity brings hope and change. Thank you for making this wish come true.</p>
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="closeThankYou()">Continue Exploring</button>
+      <button mat-stroked-button (click)="closeThankYou(); router.navigate(['/dashboard'])">Go to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- Donation Modal -->
+<div class="donation-modal-overlay" *ngIf="showDonationModal" (click)="closeDonationModal()">
+  <mat-card class="donation-modal" (click)="$event.stopPropagation()">
+    <mat-card-header>
+      <mat-card-title>Donate to Wish</mat-card-title>
+      <button mat-icon-button (click)="closeDonationModal()" class="close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content *ngIf="selectedWish">
+      <div class="wish-summary">
+        <h3>{{ selectedWish.title }}</h3>
+        <p>{{ selectedWish.ngoId?.name }}</p>
+        <div class="progress">
+          <div class="progress-bar">
+            <div class="progress-fill"
+              [style.width.%]="(selectedWish.collectedAmount / selectedWish.requiredAmount * 100)"></div>
+          </div>
+          <div class="progress-text">
+            ₹{{ selectedWish.collectedAmount }} / ₹{{ selectedWish.requiredAmount }}
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="donationForm" class="donation-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Donation Amount (₹)</mat-label>
+          <input matInput type="number" formControlName="amount" min="1" placeholder="Enter amount">
+        </mat-form-field>
+
+        <mat-checkbox formControlName="isAnonymous">Donate anonymously (as "A Kind Soul")</mat-checkbox>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="closeDonationModal()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="submitDonation()"
+        [disabled]="donationForm.invalid || isDonating">
+        <mat-icon *ngIf="!isDonating">favorite</mat-icon>
+        {{ isDonating ? 'Donating...' : 'Donate Now' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>

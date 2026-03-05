@@ -1,0 +1,241 @@
+.marketplace-wrapper {
+    min-height: 100vh;
+    padding-bottom: 80px;
+}
+
+.marketplace-hero {
+    background: linear-gradient(135deg, var(--pastel-indigo) 0%, var(--pastel-rose) 100%);
+    padding: 80px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-light);
+
+    h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 16px;
+        color: var(--text-primary);
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+    }
+}
+
+.hero-search-container {
+    max-width: 600px;
+    margin: 0 auto;
+
+    .glass-search {
+        width: 100%;
+
+        ::ng-deep .mat-mdc-text-field-wrapper {
+            background: white !important;
+            border-radius: 99px !important;
+            box-shadow: var(--shadow-md) !important;
+        }
+
+        ::ng-deep .mdc-notched-outline__leading,
+        ::ng-deep .mdc-notched-outline__notch,
+        ::ng-deep .mdc-notched-outline__trailing {
+            border: none !important;
+        }
+    }
+}
+
+.marketplace-container {
+    max-width: 1300px;
+    margin: -40px auto 0;
+    padding: 0 24px;
+}
+
+.filter-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+
+    mat-chip-listbox {
+        background: white;
+        padding: 8px 16px;
+        border-radius: 99px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-light);
+    }
+
+    mat-chip-option {
+        font-weight: 600;
+    }
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.ngo-card-refined {
+    border: none !important;
+    box-shadow: var(--shadow-md) !important;
+    border-radius: 20px !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden;
+
+    &:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-lg) !important;
+    }
+
+    mat-card-header {
+        padding: 24px 24px 16px;
+
+        .ngo-logo-container {
+            width: 64px;
+            height: 64px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            box-shadow: var(--shadow-sm);
+
+            img {
+                width: 80%;
+                height: 80%;
+                object-fit: contain;
+            }
+
+            mat-icon {
+                font-size: 32px;
+                color: var(--text-tertiary);
+            }
+        }
+
+        .ngo-name-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .verified-icon {
+            color: #3b82f6;
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    mat-card-content {
+        padding: 0 24px 24px;
+
+        .description-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            height: 4.5em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .stats-refined {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+            .stat-item {
+                .label {
+                    display: block;
+                    font-size: 0.7rem;
+                    color: var(--text-tertiary);
+                    text-transform: uppercase;
+                    font-weight: 700;
+                    margin-bottom: 2px;
+                }
+
+                .value {
+                    font-weight: 700;
+                    font-size: 1rem;
+                    color: var(--text-primary);
+                }
+            }
+        }
+    }
+
+    mat-card-actions {
+        padding: 0 24px 24px;
+
+        button {
+            width: 100%;
+            border-radius: 12px;
+        }
+    }
+}
+
+/* Category Pastel Themes */
+.theme-child {
+    background: var(--pastel-rose) !important;
+}
+
+.theme-senior {
+    background: var(--pastel-indigo) !important;
+}
+
+.theme-food {
+    background: var(--pastel-amber) !important;
+}
+
+.theme-health {
+    background: var(--pastel-emerald) !important;
+}
+
+.theme-ability {
+    background: var(--pastel-violet) !important;
+}
+
+.theme-animal {
+    background: var(--pastel-teal) !important;
+}
+
+.theme-edu {
+    background: var(--pastel-sky) !important;
+}
+
+.theme-default {
+    background: var(--bg-surface) !important;
+}
+
+.spinner {
+    margin: 100px auto;
+}
+
+.no-results {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--text-secondary);
+
+    mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+    }
+}
+
+@media (max-width: 768px) {
+    .marketplace-hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .marketplace-container {
+        margin-top: 20px;
+    }
+}

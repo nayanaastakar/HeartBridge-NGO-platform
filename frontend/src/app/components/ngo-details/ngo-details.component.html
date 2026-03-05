@@ -1,0 +1,248 @@
+<div class="ngo-details-container" *ngIf="!loading">
+
+
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <button mat-button (click)="router.navigate(['/marketplace'])" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Marketplace</span>
+    </button>
+    <div class="nav-actions">
+      <button mat-icon-button (click)="router.navigate(['/dashboard'])" matTooltip="Dashboard">
+        <mat-icon>dashboard</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Thank You Modal Overlay -->
+  <div class="thank-you-overlay" *ngIf="showThankYou" [@fadeInOut]>
+    <div class="confetti-container">
+      <div class="confetti" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]"></div>
+    </div>
+    <div class="thank-you-card">
+      <button mat-icon-button class="close-btn" (click)="closeThankYou()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <div class="success-icon-wrapper">
+        <mat-icon>favorite</mat-icon>
+      </div>
+      <h2>Thank You!</h2>
+      <p class="amount-text">You donated ₹{{ lastDonationAmount | number }}</p>
+      <p class="message-text">Your generosity brings hope and change. Thank you for being a part of HeartBridge.</p>
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" (click)="closeThankYou()">Continue Exploring</button>
+        <button mat-stroked-button (click)="router.navigate(['/dashboard'])">Go to Dashboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NGO Main Card -->
+  <mat-card class="ngo-main-card">
+    <div class="ngo-header" [ngClass]="getThemeClass(ngo.category)">
+      <div class="ngo-brand-header">
+        <div class="ngo-detail-logo">
+          <img [src]="ngoService.getFullImageUrl(ngo.logo)" [alt]="ngo.name" (error)="onImageError($event)">
+        </div>
+        <div class="ngo-info">
+          <h1>{{ ngo.name }}</h1>
+          <div class="ngo-meta">
+            <span class="category-badge">{{ ngo.category }}</span>
+            <span class="verified-badge" *ngIf="ngo.isVerified">
+              <mat-icon>verified</mat-icon>
+              Verified
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ngo-actions">
+        <button mat-raised-button color="primary" (click)="scrollToDonation()" class="donate-now-btn"
+          *ngIf="authService.getUserRole() !== 'ngo_admin'">
+          <mat-icon>favorite</mat-icon>
+          Donate Now
+        </button>
+      </div>
+    </div>
+
+    <mat-card-content>
+      <div class="ngo-description">
+        <p>{{ ngo.description }}</p>
+      </div>
+
+      <!-- Funding Progress -->
+      <div class="funding-section">
+        <div class="funding-header">
+          <h3>Funding Progress</h3>
+          <span class="progress-percentage">{{ getProgressPercentage() | number: '1.1-1' }}%</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" [style.width.%]="getProgressPercentage()"></div>
+        </div>
+        <div class="funding-stats">
+          <div class="stat-item">
+            <span class="stat-label">Raised</span>
+            <span class="stat-value raised">₹{{ ngo.totalReceived || 0 | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Goal</span>
+            <span class="stat-value goal">₹{{ ngo.fundingRequirement || 0 | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Remaining</span>
+            <span class="stat-value remaining">₹{{ getRemainingAmount() | number }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NGO Information Grid -->
+      <div class="info-section">
+        <h3>Contact Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <mat-icon class="info-icon">location_on</mat-icon>
+            <div class="info-content">
+              <span class="info-label">Address</span>
+              <span class="info-value">{{ ngo.address }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon class="info-icon">phone</mat-icon>
+            <div class="info-content">
+              <span class="info-label">Phone</span>
+              <span class="info-value">{{ ngo.phone }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon class="info-icon">email</mat-icon>
+            <div class="info-content">
+              <span class="info-label">Email</span>
+              <span class="info-value">{{ ngo.email }}</span>
+            </div>
+          </div>
+          <div class="info-item" *ngIf="ngo.website">
+            <mat-icon class="info-icon">language</mat-icon>
+            <div class="info-content">
+              <span class="info-label">Website</span>
+              <a [href]="ngo.website" target="_blank" class="info-value link">{{ ngo.website }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Recent Donations -->
+  <mat-card class="recent-donations-card" *ngIf="recentDonations.length > 0">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>history</mat-icon>
+        Recent Donations
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="donations-list">
+        <div class="donation-item" *ngFor="let donation of recentDonations">
+          <div class="donor-info">
+            <mat-icon class="donor-icon">person</mat-icon>
+            <span class="donor-name">
+              {{ donation.isAnonymous ? 'A Kind Soul' : donation.donorId?.name || 'Anonymous' }}
+            </span>
+          </div>
+          <div class="donation-amount">₹{{ donation.amount | number }}</div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Donation Section -->
+  <mat-card class="donation-card" #donationSection>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>volunteer_activism</mat-icon>
+        Make a Donation
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- Login Prompt for Non-Authenticated Users -->
+      <div class="login-prompt" *ngIf="!authService.isAuthenticated()">
+        <mat-icon class="prompt-icon">login</mat-icon>
+        <h3>Please Login to Donate</h3>
+        <p>Login to your account to make a donation and track your contribution history.</p>
+        <div class="prompt-actions">
+          <button mat-raised-button color="primary" (click)="router.navigate(['/login'])">
+            Login
+          </button>
+          <button mat-stroked-button (click)="router.navigate(['/register'])">
+            Create Account
+          </button>
+        </div>
+      </div>
+
+      <!-- Donation Form for Authenticated Users -->
+      <form [formGroup]="donationForm" *ngIf="authService.isAuthenticated()">
+        <!-- Quick Amount Buttons -->
+        <div class="quick-amounts">
+          <label class="quick-amount-label">Quick Amounts:</label>
+          <div class="amount-buttons">
+            <button mat-stroked-button *ngFor="let amount of quickAmounts" (click)="setQuickAmount(amount)"
+              [class.active]="donationForm.value.amount === amount">
+              ₹{{ amount }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Amount Input -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Custom Amount (₹)</mat-label>
+          <input matInput type="number" formControlName="amount" min="1" placeholder="Enter amount">
+          <mat-icon matSuffix>currency_rupee</mat-icon>
+          <mat-error *ngIf="donationForm.get('amount')?.hasError('required')">
+            Amount is required
+          </mat-error>
+          <mat-error *ngIf="donationForm.get('amount')?.hasError('min')">
+            Minimum amount is ₹1
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Payment Method -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Payment Method</mat-label>
+          <mat-select [(value)]="selectedPaymentMethod">
+            <mat-option value="online">
+              <mat-icon>credit_card</mat-icon>
+              Online Banking
+            </mat-option>
+            <mat-option value="upi">
+              <mat-icon>account_balance</mat-icon>
+              UPI
+            </mat-option>
+            <mat-option value="card">
+              <mat-icon>payment</mat-icon>
+              Credit/Debit Card
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Anonymous Donation -->
+        <mat-checkbox formControlName="isAnonymous" class="anonymous-checkbox">
+          <mat-icon>visibility_off</mat-icon>
+          Donate anonymously (as "A Kind Soul")
+        </mat-checkbox>
+
+        <!-- Donate Button -->
+        <button mat-raised-button color="primary" (click)="donate()" class="full-width donate-btn"
+          [disabled]="donating || donationForm.invalid">
+          <mat-icon *ngIf="!donating">favorite</mat-icon>
+          <mat-spinner *ngIf="donating" diameter="20"></mat-spinner>
+          {{ donating ? 'Processing...' : 'Donate Now' }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+  <p>Loading NGO details...</p>
+</div>

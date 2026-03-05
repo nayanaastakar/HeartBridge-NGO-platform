@@ -1,0 +1,291 @@
+/* Modern Clean Admin Dashboard */
+.admin-dashboard-container {
+    padding: 40px;
+    background-color: var(--bg-main);
+    min-height: 100vh;
+    font-family: var(--font-body);
+}
+
+.admin-welcome-banner {
+    padding: 48px 36px;
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 40%, #6366f1 100%);
+    border-radius: var(--radius-lg);
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -15%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+        border-radius: 50%;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 60%);
+        border-radius: 50%;
+    }
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+    font-family: var(--font-heading);
+    position: relative;
+}
+
+.admin-subtitle {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 1rem;
+    margin: 0;
+    position: relative;
+}
+
+.section {
+    margin-bottom: 48px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    font-family: var(--font-heading);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 32px;
+}
+
+mat-card {
+    padding: 32px;
+    border-radius: 20px;
+    border: none;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07);
+    }
+
+    mat-card-title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: rgba(0, 0, 0, 0.4);
+        letter-spacing: 0.1em;
+        margin-bottom: 12px;
+    }
+
+    mat-card-content {
+        h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+
+        p {
+            color: rgba(0, 0, 0, 0.3);
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+    }
+
+    /* Vibrant Soft Accents */
+    &:nth-child(1) {
+        background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%);
+
+        h2 {
+            color: #4f46e5;
+        }
+
+        /* Indigo */
+    }
+
+    &:nth-child(2) {
+        background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+
+        h2 {
+            color: #10b981;
+        }
+
+        /* Emerald */
+    }
+
+    &:nth-child(3) {
+        background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+
+        h2 {
+            color: #f59e0b;
+        }
+
+        /* Amber */
+    }
+
+    &:nth-child(4) {
+        background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%);
+
+        h2 {
+            color: #ec4899;
+        }
+
+        /* Pink */
+    }
+}
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.action-card {
+    cursor: pointer;
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    overflow: hidden;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    &:nth-child(1) mat-card-title mat-icon {
+        color: var(--primary);
+        background: #eef2ff;
+    }
+
+    &:nth-child(2) mat-card-title mat-icon {
+        color: var(--teal);
+        background: #f0fdfa;
+    }
+
+    &:nth-child(3) mat-card-title mat-icon {
+        color: var(--orange);
+        background: #fff7ed;
+    }
+
+    &:nth-child(4) mat-card-title mat-icon {
+        color: var(--pink);
+        background: #fdf2f8;
+    }
+
+    &:nth-child(5) mat-card-title mat-icon {
+        color: var(--purple);
+        background: #f5f3ff;
+    }
+
+    &:nth-child(6) mat-card-title mat-icon {
+        color: var(--cyan);
+        background: #ecfeff;
+    }
+
+    mat-card-title {
+        color: var(--text-primary);
+        font-size: 1.15rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-transform: none;
+        margin-bottom: 12px;
+
+        mat-icon {
+            padding: 8px;
+            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    mat-card-content p {
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+
+    button {
+        width: 100%;
+        border-radius: var(--radius-md);
+        padding: 10px 0;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        background: var(--bg-subtle);
+        color: var(--text-secondary);
+
+        &:hover {
+            background: var(--bg-main);
+            color: var(--primary);
+        }
+    }
+}
+
+.quick-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    button {
+        height: 50px;
+        padding: 0 28px;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: 0.01em;
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        &:nth-child(1) {
+            background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+            color: white;
+        }
+
+        &:nth-child(2) {
+            background: linear-gradient(135deg, #ec4899, #f472b6) !important;
+            color: white;
+        }
+
+        &:nth-child(3) {
+            background: linear-gradient(135deg, #14b8a6, #2dd4bf) !important;
+            color: white;
+        }
+
+        &:nth-child(4) {
+            background: linear-gradient(135deg, #f97316, #fb923c) !important;
+            color: white;
+        }
+    }
+}

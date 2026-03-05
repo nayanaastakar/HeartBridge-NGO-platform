@@ -1,0 +1,694 @@
+/* =======================================
+   NGO Details Component Styles
+   ======================================= */
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 24px;
+    color: var(--text-secondary);
+
+    mat-spinner {
+        margin-bottom: 8px;
+    }
+}
+
+/* ---- Navigation Header ---- */
+.nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: white;
+    border-bottom: 1px solid var(--border-light);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    .back-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: var(--text-primary);
+        border-radius: 12px;
+
+        mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+/* ---- Container ---- */
+.ngo-details-container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ---- NGO Main Card ---- */
+.ngo-main-card {
+    border-radius: 20px !important;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+    border: none !important;
+
+    .ngo-header {
+        padding: 40px 28px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 24px;
+        flex-wrap: wrap;
+
+        &.theme-child {
+            background: var(--pastel-rose);
+        }
+
+        &.theme-senior {
+            background: var(--pastel-indigo);
+        }
+
+        &.theme-food {
+            background: var(--pastel-amber);
+        }
+
+        &.theme-health {
+            background: var(--pastel-emerald);
+        }
+
+        &.theme-ability {
+            background: var(--pastel-violet);
+        }
+
+        &.theme-animal {
+            background: var(--pastel-teal);
+        }
+
+        &.theme-edu {
+            background: var(--pastel-sky);
+        }
+
+        &.theme-default {
+            background: linear-gradient(135deg, #e0e7ff, #f0fdf4);
+        }
+
+        .ngo-brand-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .ngo-detail-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            flex-shrink: 0;
+
+            img {
+                width: 80%;
+                height: 80%;
+                object-fit: contain;
+            }
+        }
+
+        .ngo-info {
+            h1 {
+                font-size: 1.8rem;
+                font-weight: 800;
+                color: var(--text-primary);
+                margin: 0 0 10px;
+                line-height: 1.2;
+            }
+
+            .ngo-meta {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .category-badge {
+                background: rgba(255, 255, 255, 0.7);
+                color: var(--text-primary);
+                font-size: 0.8rem;
+                font-weight: 700;
+                padding: 4px 12px;
+                border-radius: 99px;
+                border: 1px solid rgba(0, 0, 0, 0.08);
+            }
+
+            .verified-badge {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                background: #dbeafe;
+                color: #1d4ed8;
+                font-size: 0.8rem;
+                font-weight: 700;
+                padding: 4px 12px;
+                border-radius: 99px;
+
+                mat-icon {
+                    font-size: 14px;
+                    width: 14px;
+                    height: 14px;
+                }
+            }
+        }
+
+        .ngo-actions {
+            display: flex;
+            align-items: center;
+
+            .donate-now-btn {
+                border-radius: 12px;
+                padding: 0 24px;
+                height: 48px;
+                font-weight: 700;
+                font-size: 0.95rem;
+                box-shadow: 0 4px 12px rgba(67, 56, 202, 0.3);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+        }
+    }
+
+    mat-card-content {
+        padding: 28px 28px 32px;
+
+        .ngo-description {
+            p {
+                color: var(--text-secondary);
+                font-size: 1rem;
+                line-height: 1.7;
+                margin: 0 0 28px;
+            }
+        }
+    }
+}
+
+/* ---- Funding Section ---- */
+.funding-section {
+    background: #f8faff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 28px;
+    border: 1px solid #e0e7ff;
+
+    .funding-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .progress-percentage {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #4338ca;
+        }
+    }
+
+    .progress-bar-container {
+        height: 10px;
+        background: #e0e7ff;
+        border-radius: 99px;
+        overflow: hidden;
+        margin-bottom: 20px;
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4338ca, #818cf8);
+            border-radius: 99px;
+            transition: width 1s ease;
+        }
+    }
+
+    .funding-stats {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+
+            .stat-label {
+                display: block;
+                font-size: 0.72rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: var(--text-tertiary);
+                margin-bottom: 4px;
+                letter-spacing: 0.05em;
+            }
+
+            .stat-value {
+                font-size: 1.1rem;
+                font-weight: 800;
+            }
+
+            .raised {
+                color: #10b981;
+            }
+
+            .goal {
+                color: #4338ca;
+            }
+
+            .remaining {
+                color: #f59e0b;
+            }
+        }
+    }
+}
+
+/* ---- Info Section ---- */
+.info-section {
+    h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 20px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: #f8faff;
+            border-radius: 12px;
+            border: 1px solid #e0e7ff;
+
+            .info-icon {
+                color: #4338ca;
+                font-size: 22px;
+                width: 22px;
+                height: 22px;
+                flex-shrink: 0;
+                margin-top: 2px;
+            }
+
+            .info-content {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+
+                .info-label {
+                    font-size: 0.72rem;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    color: var(--text-tertiary);
+                    letter-spacing: 0.05em;
+                }
+
+                .info-value {
+                    font-size: 0.9rem;
+                    color: var(--text-primary);
+                    font-weight: 500;
+                    word-break: break-word;
+
+                    &.link {
+                        color: #4338ca;
+                        text-decoration: none;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* ---- Recent Donations Card ---- */
+.recent-donations-card {
+    border-radius: 20px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07) !important;
+    border: none !important;
+
+    mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.1rem;
+        font-weight: 700;
+
+        mat-icon {
+            color: #4338ca;
+        }
+    }
+
+    .donations-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 8px;
+
+        .donation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: #f8faff;
+            border-radius: 12px;
+            border: 1px solid #e0e7ff;
+
+            .donor-info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                .donor-icon {
+                    color: var(--text-tertiary);
+                    font-size: 20px;
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .donor-name {
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    color: var(--text-primary);
+                }
+            }
+
+            .donation-amount {
+                font-size: 1rem;
+                font-weight: 800;
+                color: #10b981;
+            }
+        }
+    }
+}
+
+/* ---- Donation Card ---- */
+.donation-card {
+    border-radius: 20px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07) !important;
+    border: none !important;
+
+    mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.1rem;
+        font-weight: 700;
+
+        mat-icon {
+            color: #f43f5e;
+        }
+    }
+
+    .login-prompt {
+        text-align: center;
+        padding: 40px 20px;
+
+        .prompt-icon {
+            font-size: 48px;
+            width: 48px;
+            height: 48px;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .prompt-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+    }
+
+    .quick-amounts {
+        margin-bottom: 20px;
+
+        .quick-amount-label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .amount-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+
+            button {
+                border-radius: 10px;
+                font-weight: 700;
+
+                &.active {
+                    background: #4338ca;
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .full-width {
+        width: 100%;
+        margin-bottom: 16px;
+    }
+
+    .anonymous-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+
+        mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            vertical-align: middle;
+        }
+    }
+
+    .donate-btn {
+        height: 52px;
+        border-radius: 14px !important;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 16px rgba(67, 56, 202, 0.35) !important;
+
+        mat-spinner {
+            margin-right: 8px;
+        }
+    }
+}
+
+/* ---- Thank You Overlay ---- */
+.thank-you-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+
+    .thank-you-card {
+        background: white;
+        border-radius: 24px;
+        padding: 48px 40px;
+        text-align: center;
+        max-width: 480px;
+        width: 100%;
+        position: relative;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            color: var(--text-tertiary);
+        }
+
+        .success-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f43f5e, #fb7185);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 24px rgba(244, 63, 94, 0.4);
+
+            mat-icon {
+                font-size: 40px;
+                width: 40px;
+                height: 40px;
+                color: white;
+            }
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .amount-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+
+        .message-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+
+            button {
+                border-radius: 12px;
+                padding: 0 24px;
+                height: 44px;
+                font-weight: 700;
+            }
+        }
+    }
+}
+
+/* ---- Confetti ---- */
+.confetti-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 999;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -20px;
+    border-radius: 2px;
+    animation: confetti-fall linear infinite;
+
+    @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+            left: (random(100)) * 1%;
+            animation-duration: (1.5 + random(2)) * 1s;
+            animation-delay: (random(2000) / 1000) * 1s;
+            background: nth((#f43f5e, #4338ca, #10b981, #fbbf24, #818cf8, #34d399),
+                    (($i - 1) % 6 + 1));
+            transform: rotate(#{random(360)}deg);
+        }
+    }
+}
+
+@keyframes confetti-fall {
+    0% {
+        top: -20px;
+        opacity: 1;
+    }
+
+    100% {
+        top: 110vh;
+        opacity: 0;
+    }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    .ngo-details-container {
+        padding: 20px 16px 60px;
+    }
+
+    .ngo-main-card .ngo-header {
+        padding: 28px 20px;
+        flex-direction: column;
+
+        .ngo-brand-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    .info-section .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .funding-stats {
+        flex-direction: column;
+
+        .stat-item {
+            text-align: left !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+}

@@ -1,0 +1,255 @@
+<div class="system-maintenance-container">
+  <div class="header">
+    <h1>
+      <mat-icon>build</mat-icon>
+      System Maintenance
+    </h1>
+    <p>Monitor and maintain system health, logs, and data</p>
+  </div>
+
+  <mat-tab-group [(selectedIndex)]="activeTab" (selectedIndexChange)="onTabChange($event)">
+    <!-- System Health Tab -->
+    <mat-tab label="System Health">
+      <div class="tab-content">
+        <div class="health-overview">
+          <mat-card class="health-card">
+            <mat-card-header>
+              <mat-card-title>System Status</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="health-metrics">
+                <div class="metric">
+                  <mat-icon class="metric-icon {{ systemHealth.database === 'Connected' ? 'success' : 'error' }}">
+                    {{ systemHealth.database === 'Connected' ? 'check_circle' : 'error' }}
+                  </mat-icon>
+                  <div class="metric-info">
+                    <span class="metric-label">Database</span>
+                    <span class="metric-value">{{ systemHealth.database || 'Unknown' }}</span>
+                  </div>
+                </div>
+                <div class="metric">
+                  <mat-icon class="metric-icon success">check_circle</mat-icon>
+                  <div class="metric-info">
+                    <span class="metric-label">API Server</span>
+                    <span class="metric-value">{{ systemHealth.api || 'Unknown' }}</span>
+                  </div>
+                </div>
+                <div class="metric">
+                  <mat-icon class="metric-icon">schedule</mat-icon>
+                  <div class="metric-info">
+                    <span class="metric-label">Uptime</span>
+                    <span class="metric-value">{{ systemHealth.uptime || 'Unknown' }}</span>
+                  </div>
+                </div>
+                <div class="metric">
+                  <mat-icon class="metric-icon">memory</mat-icon>
+                  <div class="metric-info">
+                    <span class="metric-label">Memory</span>
+                    <span class="metric-value">{{ systemHealth.memory?.used || 'Unknown' }} / {{
+                      systemHealth.memory?.total || 'Unknown' }}</span>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <div class="action-buttons">
+            <button mat-raised-button color="primary" (click)="checkDatabase()" [disabled]="loading">
+              <mat-icon>check</mat-icon>
+              Check Database
+            </button>
+            <button mat-raised-button color="accent" (click)="clearCache()" [disabled]="loading">
+              <mat-icon>clear</mat-icon>
+              Clear Cache
+            </button>
+            <button mat-raised-button color="warn" (click)="resetStats()" [disabled]="loading">
+              <mat-icon>refresh</mat-icon>
+              Reset Stats
+            </button>
+            <button mat-raised-button color="primary" (click)="backupData()" [disabled]="loading">
+              <mat-icon>backup</mat-icon>
+              Backup Data
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Logs Tab -->
+    <mat-tab label="System Logs">
+      <div class="tab-content">
+        <div class="logs-section">
+          <!-- Log Filters -->
+          <mat-card class="filter-card">
+            <mat-card-header>
+              <mat-card-title>Filter Logs</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <form [formGroup]="logFilterForm" class="filter-form">
+                <div class="filter-row">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Log Level</mat-label>
+                    <mat-select formControlName="level">
+                      <mat-option value="">All Levels</mat-option>
+                      <mat-option value="INFO">INFO</mat-option>
+                      <mat-option value="WARN">WARN</mat-option>
+                      <mat-option value="ERROR">ERROR</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Action</mat-label>
+                    <input matInput formControlName="action" placeholder="Filter by action">
+                  </mat-form-field>
+                </div>
+
+                <div class="filter-row">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Start Date</mat-label>
+                    <input matInput type="datetime-local" formControlName="startDate">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>End Date</mat-label>
+                    <input matInput type="datetime-local" formControlName="endDate">
+                  </mat-form-field>
+                </div>
+
+                <div class="filter-actions">
+                  <button mat-stroked-button (click)="applyLogFilters()">
+                    <mat-icon>filter_list</mat-icon>
+                    Apply Filters
+                  </button>
+                  <button mat-stroked-button (click)="resetLogFilters()">
+                    <mat-icon>clear</mat-icon>
+                    Reset
+                  </button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Log Statistics -->
+          <mat-card class="stats-card" *ngIf="logStats">
+            <mat-card-header>
+              <mat-card-title>Log Statistics</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="log-stats">
+                <div class="stat-item">
+                  <span class="stat-label">Total Logs:</span>
+                  <span class="stat-value">{{ logStats.total || 0 }}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Recent (1h):</span>
+                  <span class="stat-value">{{ logStats.recent || 0 }}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">By Level:</span>
+                  <div class="level-stats">
+                    <span *ngFor="let entry of logStats.byLevel | keyvalue" class="level-stat">
+                      {{ entry.key }}: {{ entry.value }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Log Entries -->
+          <mat-card class="logs-card">
+            <mat-card-header>
+              <mat-card-title>Recent Logs</mat-card-title>
+              <span class="log-count">{{ maintenanceLogs.length }} entries</span>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="log-entries">
+                <div class="log-entry" *ngFor="let log of maintenanceLogs" [class]="getLogLevelColor(log.level)">
+                  <div class="log-header">
+                    <span class="log-timestamp">{{ formatTimestamp(log.timestamp) }}</span>
+                    <span class="log-level">{{ log.level }}</span>
+                    <span class="log-action">{{ log.action }}</span>
+                  </div>
+                  <div class="log-details">
+                    <p class="log-detail-text">{{ formatLogDetails(log.details) }}</p>
+                    <span class="log-user">by {{ log.userId }}</span>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Data Management Tab -->
+    <mat-tab label="Data Management">
+      <div class="tab-content">
+        <div class="data-management">
+          <!-- Collections Overview -->
+          <mat-card class="collections-card">
+            <mat-card-header>
+              <mat-card-title>Data Collections</mat-card-title>
+              <mat-subtitle>View and manage database collections</mat-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="collections-grid">
+                <div class="collection-item" *ngFor="let collection of collections">
+                  <div class="collection-info">
+                    <mat-icon class="collection-icon">{{ getCollectionIcon(collection.name) }}</mat-icon>
+                    <div class="collection-details">
+                      <h4>{{ collection.name }}</h4>
+                      <p>{{ collection.description }}</p>
+                      <span class="collection-count">{{ collection.count }} records</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Clear Data Form -->
+          <mat-card class="clear-data-card">
+            <mat-card-header>
+              <mat-card-title>Clear Data</mat-card-title>
+              <mat-subtitle>⚠️ This action cannot be undone</mat-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <form [formGroup]="clearDataForm" class="clear-data-form">
+                <div class="form-field">
+                  <mat-label>Select Collections to Clear</mat-label>
+                  <div class="collections-checkboxes">
+                    <mat-checkbox *ngFor="let collection of collections" [value]="collection.name"
+                      (change)="onCollectionToggle(collection, $event)" formControlName="collections">
+                      {{ collection.name }} ({{ collection.count }} records)
+                    </mat-checkbox>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <mat-checkbox formControlName="confirm" color="warn">
+                    I understand this will permanently delete all selected data
+                  </mat-checkbox>
+                </div>
+
+                <div class="form-actions">
+                  <button mat-raised-button color="warn" type="submit" (click)="clearData()"
+                    [disabled]="clearDataForm.invalid || loading">
+                    <mat-icon>delete_forever</mat-icon>
+                    Clear Selected Data
+                  </button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+    <p>Processing...</p>
+  </div>
+</div>

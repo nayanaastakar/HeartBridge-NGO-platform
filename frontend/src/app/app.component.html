@@ -1,0 +1,76 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="sidenav.toggle()" *ngIf="authService.isAuthenticated()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <div class="logo-badge" routerLink="/dashboard">
+    <span>HeartBridge</span>
+  </div>
+  <span class="spacer"></span>
+  <span class="tagline">Connecting Hearts Through Kindness</span>
+  <span class="spacer"></span>
+
+  <button mat-button *ngIf="!authService.isAuthenticated()" routerLink="/login">Login</button>
+  <button mat-button *ngIf="!authService.isAuthenticated()" routerLink="/register">Register</button>
+  <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="authService.isAuthenticated()">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      My Profile
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="authService.logout()">Logout</button>
+  </mat-menu>
+</mat-toolbar>
+
+<mat-sidenav-container *ngIf="authService.isAuthenticated()">
+  <mat-sidenav #sidenav mode="side" opened="false">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+      <a mat-list-item routerLink="/profile" routerLinkActive="active">
+        <mat-icon>person</mat-icon>
+        <span>My Profile</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item routerLink="/marketplace" routerLinkActive="active">
+        <mat-icon>store</mat-icon>
+        <span>NGO Marketplace</span>
+      </a>
+      <a mat-list-item routerLink="/wishes" routerLinkActive="active">
+        <mat-icon>card_giftcard</mat-icon>
+        <span>Wish Box</span>
+      </a>
+      <a mat-list-item routerLink="/emergency-funds" routerLinkActive="active">
+        <mat-icon>emergency</mat-icon>
+        <span>Emergency Funds</span>
+      </a>
+      <a mat-list-item routerLink="/adopt-a-day" routerLinkActive="active">
+        <mat-icon>calendar_today</mat-icon>
+        <span>Adopt a Day</span>
+      </a>
+      <a mat-list-item routerLink="/impact-stories" routerLinkActive="active">
+        <mat-icon>image_search</mat-icon>
+        <span>Impact Stories</span>
+      </a>
+      <a mat-list-item routerLink="/discussions" routerLinkActive="active">
+        <mat-icon>forum</mat-icon>
+        <span>Discussions</span>
+      </a>
+      <a mat-list-item routerLink="/gratitude-wall" routerLinkActive="active">
+        <mat-icon>favorite</mat-icon>
+        <span>Gratitude Wall</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<div *ngIf="!authService.isAuthenticated()">
+  <router-outlet></router-outlet>
+</div>
