@@ -26,11 +26,11 @@ const impactStories = [
     problemStatement: "80 underprivileged children were studying outdoors without proper classroom infrastructure, facing severe weather conditions and lack of educational resources.",
     solutionDescription: "With donor support, we built a complete classroom facility with roof, desks, blackboard, and educational materials. Children now learn in a safe, protected environment.",
     beforePhoto: {
-      url: "https://images.unsplash.com/photo-1427504494785-cdda0afda338?w=600&h=400&fit=crop&q=80",
+      url: "/uploads/impact-stories/story1-before.png",
       caption: "Before: Children studying outdoors in harsh conditions"
     },
     afterPhoto: {
-      url: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&h=400&fit=crop&q=80",
+      url: "/uploads/impact-stories/story1-after.png",
       caption: "After: Complete classroom with proper infrastructure"
     },
     fundingDetails: {
@@ -64,7 +64,7 @@ const impactStories = [
       caption: "Before: Basic facilities for elderly residents"
     },
     afterPhoto: {
-      url: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop&q=80",
+      url: "/uploads/impact-stories/story2-after.png",
       caption: "After: Modern medical equipment and care facilities"
     },
     fundingDetails: {
