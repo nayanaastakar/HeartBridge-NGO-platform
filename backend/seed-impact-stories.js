@@ -26,11 +26,11 @@ const impactStories = [
     problemStatement: "80 underprivileged children were studying outdoors without proper classroom infrastructure, facing severe weather conditions and lack of educational resources.",
     solutionDescription: "With donor support, we built a complete classroom facility with roof, desks, blackboard, and educational materials. Children now learn in a safe, protected environment.",
     beforePhoto: {
-      url: "/uploads/impact-stories/story1-before.png",
+      url: "http://localhost:3000/uploads/impact-stories/story1-before.png",
       caption: "Before: Children studying outdoors in harsh conditions"
     },
     afterPhoto: {
-      url: "/uploads/impact-stories/story1-after.png",
+      url: "http://localhost:3000/uploads/impact-stories/story1-after.png",
       caption: "After: Complete classroom with proper infrastructure"
     },
     fundingDetails: {
@@ -60,11 +60,11 @@ const impactStories = [
     problemStatement: "120+ elderly residents lacked basic medical equipment, mobility aids, and proper healthcare facilities. Many suffered from mobility issues and health complications.",
     solutionDescription: "We provided hospital beds, wheelchairs, walking aids, medical monitoring devices, and trained caregivers. Elderly residents now have dignified care with comfort and safety.",
     beforePhoto: {
-      url: "https://images.unsplash.com/photo-1599832334385-c039c9f0d8d0?w=600&h=400&fit=crop&q=80",
+      url: "http://localhost:3000/uploads/impact-stories/story1-before.png",
       caption: "Before: Basic facilities for elderly residents"
     },
     afterPhoto: {
-      url: "/uploads/impact-stories/story2-after.png",
+      url: "http://localhost:3000/uploads/impact-stories/story2-after.png",
       caption: "After: Modern medical equipment and care facilities"
     },
     fundingDetails: {
@@ -94,11 +94,11 @@ const impactStories = [
     problemStatement: "200+ families in remote village suffered from waterborne diseases due to contaminated water sources. Lack of clean water caused malnutrition and health issues.",
     solutionDescription: "We installed a deep borewell with purification system, water storage tanks, and trained community leaders in maintenance. Now 200 families have safe drinking water daily.",
     beforePhoto: {
-      url: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&h=400&fit=crop&q=80",
+      url: "http://localhost:3000/uploads/impact-stories/login-hero.png",
       caption: "Before: Contaminated water sources"
     },
     afterPhoto: {
-      url: "https://images.unsplash.com/photo-1532996122724-8f3c2cd83c5d?w=600&h=400&fit=crop&q=80",
+      url: "http://localhost:3000/uploads/impact-stories/story1-after.png",
       caption: "After: Clean water purification system installed"
     },
     fundingDetails: {
@@ -128,11 +128,11 @@ const impactStories = [
     problemStatement: "45 physically disabled individuals lacked access to rehabilitation services and vocational training. Limited mobility and lack of skills prevented economic independence.",
     solutionDescription: "We established a rehabilitation center with therapy equipment, trained physiotherapists, and vocational skills programs. Disabled individuals now have hope for independence.",
     beforePhoto: {
-      url: "https://images.unsplash.com/photo-1604881991720-f91415f3cef2?w=600&h=400&fit=crop&q=80",
+      url: "http://localhost:3000/uploads/impact-stories/story1-before.png",
       caption: "Before: Limited rehabilitation facilities"
     },
     afterPhoto: {
-      url: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop&q=80",
+      url: "http://localhost:3000/uploads/impact-stories/login-hero.png",
       caption: "After: Full-equipped rehabilitation center"
     },
     fundingDetails: {
@@ -162,11 +162,11 @@ const impactStories = [
     problemStatement: "150 underprivileged children suffered from severe malnutrition and lacked access to nutritious meals. Poor nutrition affected their learning and development.",
     solutionDescription: "We started a daily meal program providing balanced nutrition with vegetables, grains, and protein. Children now receive 2 healthy meals daily plus health checkups.",
     beforePhoto: {
-      url: "https://images.unsplash.com/photo-1488535695519-47d5f2cbf8b8?w=600&h=400&fit=crop&q=80",
+      url: "http://localhost:3000/uploads/impact-stories/story2-after.png",
       caption: "Before: Children with malnutrition concerns"
     },
     afterPhoto: {
-      url: "https://images.unsplash.com/photo-1609501676725-7186f017a4b7?w=600&h=400&fit=crop&q=80",
+      url: "http://localhost:3000/uploads/impact-stories/story1-after.png",
       caption: "After: Healthy children receiving nutritious meals"
     },
     fundingDetails: {
