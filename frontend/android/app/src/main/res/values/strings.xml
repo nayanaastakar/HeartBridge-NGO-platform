@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">HeartBridge</string>
+    <string name="title_activity_main">HeartBridge</string>
+    <string name="package_name">com.heartbridge.app</string>
+    <string name="custom_url_scheme">com.heartbridge.app</string>
+</resources>

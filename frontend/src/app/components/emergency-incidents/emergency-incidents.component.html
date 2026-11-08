@@ -1,0 +1,166 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1><mat-icon color="warn">emergency</mat-icon> Emergency Incidents</h1>
+    <div class="header-actions">
+      <button mat-raised-button color="warn" (click)="showCreateForm = !showCreateForm" *ngIf="isAdmin">
+        <mat-icon>report_problem</mat-icon> Report Incident
+      </button>
+    </div>
+  </div>
+
+  <!-- Create Incident Form -->
+  <mat-card *ngIf="showCreateForm" class="form-card emergency-form">
+    <mat-card-header>
+      <mat-icon mat-card-avatar color="warn">emergency</mat-icon>
+      <mat-card-title>Report Emergency Incident</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="incidentForm" (ngSubmit)="createIncident()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Incident Title</mat-label>
+          <input matInput formControlName="title" required placeholder="e.g., Flash Flood in District X">
+        </mat-form-field>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Disaster Type</mat-label>
+            <mat-select formControlName="type">
+              <mat-option *ngFor="let t of typeOptions" [value]="t">{{ t | titlecase }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Severity Level</mat-label>
+            <mat-select formControlName="severity">
+              <mat-option *ngFor="let s of severityOptions" [value]="s">{{ s | titlecase }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Situation Description</mat-label>
+          <textarea matInput formControlName="description" rows="4" required></textarea>
+        </mat-form-field>
+        <div formGroupName="location">
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>City / District</mat-label>
+              <input matInput formControlName="city" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>State</mat-label>
+              <input matInput formControlName="state" required>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Estimated People Affected</mat-label>
+            <input matInput type="number" formControlName="affectedPeople">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Contact Person</mat-label>
+            <input matInput formControlName="contactPerson">
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Resources Needed</mat-label>
+          <textarea matInput formControlName="resourcesNeeded" rows="2" placeholder="Food, water, medical supplies..."></textarea>
+        </mat-form-field>
+        <div class="form-actions">
+          <button mat-button type="button" (click)="showCreateForm = false">Cancel</button>
+          <button mat-raised-button color="warn" type="submit" [disabled]="incidentForm.invalid">Report Incident</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Main Tabs -->
+  <mat-tab-group [(selectedIndex)]="activeTab" class="main-tabs">
+    <mat-tab label="Active Incidents">
+      <div class="tab-content">
+        <div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>
+        <div *ngIf="!loading && incidents.length === 0" class="empty-state">
+          <mat-icon color="primary">check_circle</mat-icon>
+          <p>No active emergency incidents reported.</p>
+        </div>
+        <div class="incidents-list" *ngIf="!loading">
+          <mat-card *ngFor="let incident of incidents" class="incident-card" [class]="'severity-' + incident.severity">
+            <mat-card-header>
+              <mat-icon mat-card-avatar [color]="getSeverityColor(incident.severity)">
+                {{ incident.type === 'flood' ? 'water_damage' : incident.type === 'earthquake' ? 'volcano' : 'emergency' }}
+              </mat-icon>
+              <mat-card-title>{{ incident.title }}</mat-card-title>
+              <mat-card-subtitle>
+                {{ incident.location?.city }}, {{ incident.location?.state }} |
+                {{ incident.createdAt | date:'mediumDate' }}
+              </mat-card-subtitle>
+              <div class="severity-badges">
+                <mat-chip [color]="getSeverityColor(incident.severity)" selected>{{ incident.severity | titlecase }}</mat-chip>
+                <span class="status-text" [class]="getStatusClass(incident.status)">{{ incident.status | titlecase }}</span>
+              </div>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{ incident.description | slice:0:200 }}{{ incident.description?.length > 200 ? '...' : '' }}</p>
+              <div class="incident-stats">
+                <span class="stat"><mat-icon>people</mat-icon>{{ incident.affectedPeople | number }} affected</span>
+                <span class="stat"><mat-icon>update</mat-icon>{{ incident.updates?.length || 0 }} updates</span>
+                <span class="stat" *ngIf="incident.resourcesNeeded"><mat-icon>inventory</mat-icon>Resources needed</span>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button color="primary" (click)="viewIncident(incident)">View Details</button>
+              <button mat-button color="accent" *ngIf="isAdmin" (click)="viewIncident(incident)">Post Update</button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Incident Detail" *ngIf="selectedIncident">
+      <div class="tab-content">
+        <mat-card class="detail-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar color="warn">emergency</mat-icon>
+            <mat-card-title>{{ selectedIncident.title }}</mat-card-title>
+            <mat-card-subtitle>{{ selectedIncident.type | titlecase }} | {{ selectedIncident.location?.city }}, {{ selectedIncident.location?.state }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="detail-section">
+              <h3>Situation Report</h3>
+              <p>{{ selectedIncident.description }}</p>
+            </div>
+            <div class="detail-grid">
+              <div class="detail-item"><strong>Affected People:</strong> {{ selectedIncident.affectedPeople | number }}</div>
+              <div class="detail-item"><strong>Severity:</strong> {{ selectedIncident.severity | titlecase }}</div>
+              <div class="detail-item"><strong>Status:</strong> {{ selectedIncident.status | titlecase }}</div>
+              <div class="detail-item" *ngIf="selectedIncident.contactPerson"><strong>Contact:</strong> {{ selectedIncident.contactPerson }}</div>
+            </div>
+            <div class="detail-section" *ngIf="selectedIncident.resourcesNeeded">
+              <h3>Resources Needed</h3>
+              <p>{{ selectedIncident.resourcesNeeded }}</p>
+            </div>
+            <div class="detail-section" *ngIf="selectedIncident.updates?.length">
+              <h3>Situation Updates</h3>
+              <div *ngFor="let update of selectedIncident.updates" class="update-item">
+                <span class="update-time">{{ update.timestamp | date:'short' }}</span>
+                <p>{{ update.message }}</p>
+              </div>
+            </div>
+            <!-- Post Update Form -->
+            <div class="detail-section" *ngIf="isAdmin">
+              <h3>Post an Update</h3>
+              <form [formGroup]="updateForm" (ngSubmit)="addUpdate()">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Update Message</mat-label>
+                  <textarea matInput formControlName="message" rows="3" required></textarea>
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="submit" [disabled]="updateForm.invalid">Post Update</button>
+              </form>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <button mat-button (click)="selectedIncident = null; activeTab = 0" class="back-btn">
+          <mat-icon>arrow_back</mat-icon> Back to List
+        </button>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

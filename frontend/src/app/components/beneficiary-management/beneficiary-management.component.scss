@@ -1,0 +1,25 @@
+.page-container { padding: 24px; max-width: 1200px; margin: 0 auto; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.page-header h1 { display: flex; align-items: center; gap: 8px; font-size: 28px; color: #333; margin: 0; }
+.header-actions { display: flex; gap: 12px; }
+.form-card { margin-bottom: 24px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.full-width { width: 100%; }
+.form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px; }
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat-card { display: flex; align-items: center; gap: 16px; padding: 16px 24px !important; }
+.stat-card mat-icon { font-size: 36px; height: 36px; width: 36px; }
+.stat-info { display: flex; flex-direction: column; }
+.stat-num { font-size: 28px; font-weight: 700; color: #e91e8c; }
+.main-tabs { margin-top: 24px; }
+.tab-content { padding: 24px 0; }
+.beneficiary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.beneficiary-card { cursor: pointer; transition: box-shadow 0.2s; }
+.beneficiary-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+.vulnerability-bar { margin: 8px 0; }
+.vulnerability-bar span { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
+.needs-text { font-size: 13px; color: #666; margin: 4px 0; }
+.loading-center { display: flex; justify-content: center; padding: 48px; }
+.empty-state { text-align: center; padding: 48px; color: #999; }
+.empty-state mat-icon { font-size: 64px; height: 64px; width: 64px; margin-bottom: 16px; }
+.full-width-table { width: 100%; }

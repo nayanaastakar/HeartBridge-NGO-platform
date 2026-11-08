@@ -1,0 +1,231 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1><mat-icon>business</mat-icon> CSR & Grants Portal</h1>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" *ngIf="!myCorporate" (click)="showCorporateForm = !showCorporateForm">
+        <mat-icon>add_business</mat-icon> Register Corporate
+      </button>
+      <button mat-raised-button color="accent" *ngIf="myCorporate" (click)="showGrantForm = !showGrantForm">
+        <mat-icon>add</mat-icon> Create Grant
+      </button>
+    </div>
+  </div>
+
+  <!-- Corporate Profile Card -->
+  <mat-card *ngIf="myCorporate" class="corporate-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>business</mat-icon>
+      <mat-card-title>{{ myCorporate.companyName }}</mat-card-title>
+      <mat-card-subtitle>{{ myCorporate.sector }} | CSR Budget: ₹{{ myCorporate.csrBudget | number }}</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+
+  <!-- Corporate Form -->
+  <mat-card *ngIf="showCorporateForm" class="form-card">
+    <mat-card-header><mat-card-title>Register Corporate Profile</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="corporateForm" (ngSubmit)="registerCorporate()">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Company Name</mat-label>
+            <input matInput formControlName="companyName" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Sector</mat-label>
+            <mat-select formControlName="sector">
+              <mat-option *ngFor="let s of sectorOptions" [value]="s">{{ s }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Contact Person</mat-label>
+            <input matInput formControlName="contactPerson" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Contact Email</mat-label>
+            <input matInput type="email" formControlName="contactEmail" required>
+          </mat-form-field>
+        </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>CSR Budget (₹)</mat-label>
+            <input matInput type="number" formControlName="csrBudget">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Website</mat-label>
+            <input matInput formControlName="website" placeholder="https://...">
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>CSR Mission Description</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+        </mat-form-field>
+        <div class="form-actions">
+          <button mat-button type="button" (click)="showCorporateForm = false">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="corporateForm.invalid">Register</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Grant Creation Form -->
+  <mat-card *ngIf="showGrantForm" class="form-card">
+    <mat-card-header><mat-card-title>Create New Grant</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="grantForm" (ngSubmit)="createGrant()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Grant Title</mat-label>
+          <input matInput formControlName="title" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3" required></textarea>
+        </mat-form-field>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Total Amount (₹)</mat-label>
+            <input matInput type="number" formControlName="totalAmount" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Application Deadline</mat-label>
+            <input matInput type="date" formControlName="deadline" required>
+          </mat-form-field>
+        </div>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Eligible Sectors</mat-label>
+            <mat-select formControlName="eligibleSectors" multiple>
+              <mat-option *ngFor="let s of sectorOptions" [value]="s">{{ s }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Max Applicants</mat-label>
+            <input matInput type="number" formControlName="maxApplicants">
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Requirements / Eligibility Criteria</mat-label>
+          <textarea matInput formControlName="requirements" rows="2"></textarea>
+        </mat-form-field>
+        <div class="form-actions">
+          <button mat-button type="button" (click)="showGrantForm = false">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="grantForm.invalid">Create Grant</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Apply Form -->
+  <mat-card *ngIf="showApplyForm && selectedGrant" class="form-card">
+    <mat-card-header><mat-card-title>Apply for Grant: {{ selectedGrant.title }}</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="applyForm" (ngSubmit)="applyForGrant()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Proposal Title</mat-label>
+          <input matInput formControlName="proposalTitle" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Proposal Description</mat-label>
+          <textarea matInput formControlName="proposalDescription" rows="4" required></textarea>
+        </mat-form-field>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Requested Amount (₹)</mat-label>
+            <input matInput type="number" formControlName="requestedAmount" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Project Timeline</mat-label>
+            <input matInput formControlName="timeline">
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Expected Social Impact</mat-label>
+          <textarea matInput formControlName="expectedImpact" rows="3" required></textarea>
+        </mat-form-field>
+        <div class="form-actions">
+          <button mat-button type="button" (click)="showApplyForm = false; selectedGrant = null">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="applyForm.invalid">Submit Application</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Grants Tab -->
+  <mat-tab-group [(selectedIndex)]="activeTab" class="main-tabs">
+    <mat-tab label="Available Grants">
+      <div class="tab-content">
+        <div *ngIf="loading" class="loading-center"><mat-spinner></mat-spinner></div>
+        <div *ngIf="!loading && grants.length === 0" class="empty-state">
+          <mat-icon>card_giftcard</mat-icon>
+          <p>No grants available at this time.</p>
+        </div>
+        <div class="grants-grid" *ngIf="!loading">
+          <mat-card *ngFor="let grant of grants" class="grant-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar color="primary">card_giftcard</mat-icon>
+              <mat-card-title>{{ grant.title }}</mat-card-title>
+              <mat-card-subtitle>Deadline: {{ grant.deadline | date }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{ grant.description | slice:0:120 }}...</p>
+              <div class="grant-amount">₹{{ grant.totalAmount | number }}</div>
+              <div class="grant-sectors">
+                <mat-chip *ngFor="let s of grant.eligibleSectors" size="small">{{ s }}</mat-chip>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-raised-button color="primary" (click)="openApplyForm(grant)" *ngIf="isNgoAdmin">
+                Apply Now
+              </button>
+              <span class="applications-count" *ngIf="grant.applications">
+                {{ grant.applications?.length || 0 }} applications
+              </span>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="My Applications" *ngIf="isNgoAdmin">
+      <div class="tab-content">
+        <div *ngIf="myApplications.length === 0" class="empty-state">
+          <mat-icon>description</mat-icon>
+          <p>No grant applications submitted yet.</p>
+        </div>
+        <table mat-table [dataSource]="myApplications" *ngIf="myApplications.length > 0" class="full-width-table mat-elevation-z2">
+          <ng-container matColumnDef="grant">
+            <th mat-header-cell *matHeaderCellDef>Grant</th>
+            <td mat-cell *matCellDef="let a">{{ a.grantId?.title || 'N/A' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="ngo">
+            <th mat-header-cell *matHeaderCellDef>NGO</th>
+            <td mat-cell *matCellDef="let a">{{ a.ngoId?.name || 'N/A' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>Requested</th>
+            <td mat-cell *matCellDef="let a">₹{{ a.requestedAmount | number }}</td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let a">
+              <mat-chip [color]="getStatusColor(a.status)">{{ a.status | titlecase }}</mat-chip>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="appliedAt">
+            <th mat-header-cell *matHeaderCellDef>Applied</th>
+            <td mat-cell *matCellDef="let a">{{ a.appliedAt | date }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let a">
+              <button mat-icon-button color="primary"><mat-icon>visibility</mat-icon></button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="appColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: appColumns;"></tr>
+        </table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

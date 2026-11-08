@@ -12,7 +12,7 @@ export interface User {
   _id: string;
   name: string;
   email: string;
-  role: 'donor' | 'ngo_admin' | 'system_admin';
+  role: 'donor' | 'ngo_admin' | 'system_admin' | 'corporate' | 'volunteer' | 'beneficiary';
   phone?: string;
   address?: string;
   profilePicture?: string;
@@ -188,6 +188,8 @@ export class AuthService {
     }
     return user;
   }
+
+  getCurrentUser(): User | null { return this.getUser(); }
 
   getUserRole(): string | null {
     const user = this.getUser();

@@ -40,11 +40,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatBadgeModule } from '@angular/material/badge';
 
 // Chart.js
 import { NgChartsModule } from 'ng2-charts';
 
-// Components
+// Existing Components
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { AdminRegisterComponent } from './components/auth/admin-register/admin-register.component';
@@ -72,6 +73,16 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ReviewDocsDialogComponent } from './components/review-docs-dialog/review-docs-dialog.component';
 import { VerifyEmailComponent } from './components/auth/verify-email/verify-email.component';
 import { SafePipe } from './pipes/safe.pipe';
+import { AddImpactStoryDialogComponent } from './components/add-impact-story-dialog/add-impact-story-dialog.component';
+import { AdminLoginComponent } from './components/auth/admin-login/admin-login.component';
+
+// New HeartBridge 2.0 Components
+import { VolunteerManagementComponent } from './components/volunteer-management/volunteer-management.component';
+import { BeneficiaryManagementComponent } from './components/beneficiary-management/beneficiary-management.component';
+import { InventoryManagementComponent } from './components/inventory-management/inventory-management.component';
+import { CsrPortalComponent } from './components/csr-portal/csr-portal.component';
+import { EmergencyIncidentsComponent } from './components/emergency-incidents/emergency-incidents.component';
+import { AiIntelligenceComponent } from './components/ai-intelligence/ai-intelligence.component';
 
 // Services
 import { AuthInterceptor } from './services/auth.interceptor';
@@ -85,8 +96,12 @@ import { GratitudeService } from './services/gratitude.service';
 import { AnalyticsService } from './services/analytics.service';
 import { ImpactStoryService } from './services/impact-story.service';
 import { DiscussionService } from './services/discussion.service';
-import { AddImpactStoryDialogComponent } from './components/add-impact-story-dialog/add-impact-story-dialog.component';
-import { AdminLoginComponent } from './components/auth/admin-login/admin-login.component';
+import { VolunteerService } from './services/volunteer.service';
+import { BeneficiaryService } from './services/beneficiary.service';
+import { InventoryService } from './services/inventory.service';
+import { CsrService } from './services/csr.service';
+import { EmergencyIncidentService } from './services/emergency-incident.service';
+import { AiService } from './services/ai.service';
 
 @NgModule({
   declarations: [
@@ -119,7 +134,14 @@ import { AdminLoginComponent } from './components/auth/admin-login/admin-login.c
     ReviewDocsDialogComponent,
     VerifyEmailComponent,
     SafePipe,
-    AdminLoginComponent
+    AdminLoginComponent,
+    // HeartBridge 2.0
+    VolunteerManagementComponent,
+    BeneficiaryManagementComponent,
+    InventoryManagementComponent,
+    CsrPortalComponent,
+    EmergencyIncidentsComponent,
+    AiIntelligenceComponent
   ],
   imports: [
     BrowserModule,
@@ -155,6 +177,7 @@ import { AdminLoginComponent } from './components/auth/admin-login/admin-login.c
     MatTooltipModule,
     MatProgressBarModule,
     MatExpansionModule,
+    MatBadgeModule,
     NgChartsModule
   ],
   providers: [
@@ -168,6 +191,12 @@ import { AdminLoginComponent } from './components/auth/admin-login/admin-login.c
     AnalyticsService,
     ImpactStoryService,
     DiscussionService,
+    VolunteerService,
+    BeneficiaryService,
+    InventoryService,
+    CsrService,
+    EmergencyIncidentService,
+    AiService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
@@ -181,4 +210,3 @@ import { AdminLoginComponent } from './components/auth/admin-login/admin-login.c
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-

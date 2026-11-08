@@ -641,7 +641,7 @@
         &:nth-child(#{$i}) {
             left: (random(100)) * 1%;
             animation-duration: (1.5 + random(2)) * 1s;
-            animation-delay: (random(2000) / 1000) * 1s;
+            animation-delay: (calc(random(2000) / 1000)) * 1s;
             background: nth((#f43f5e, #4338ca, #10b981, #fbbf24, #818cf8, #34d399),
                     (($i - 1) % 6 + 1));
             transform: rotate(#{random(360)}deg);

@@ -1,0 +1,84 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: heartbridge-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: heartbridge
+    networks:
+      - heartbridge-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: heartbridge-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - heartbridge-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: heartbridge-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      MONGODB_URI: mongodb://mongodb:27017/heartbridge
+      JWT_SECRET: ${JWT_SECRET:-heartbridge_super_secret_key_change_in_production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-heartbridge_refresh_secret_change_in_production}
+      AI_SERVICE_URL: http://ai-service:8001
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - backend_uploads:/app/uploads
+    networks:
+      - heartbridge-network
+
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: heartbridge-ai
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/heartbridge
+    depends_on:
+      - mongodb
+    networks:
+      - heartbridge-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: heartbridge-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - heartbridge-network
+
+volumes:
+  mongo_data:
+  backend_uploads:
+
+networks:
+  heartbridge-network:
+    driver: bridge

@@ -39,6 +39,17 @@ mat-toolbar {
       letter-spacing: -0.04em;
     }
 
+    .version-badge {
+      font-size: 0.65rem !important;
+      font-weight: 700 !important;
+      background: linear-gradient(135deg, #e91e8c, #9c27b0) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      letter-spacing: 0 !important;
+      vertical-align: super;
+      margin-left: -4px;
+    }
+
     &:hover {
       transform: scale(1.02);
     }
@@ -71,22 +82,30 @@ mat-sidenav-container {
     background-color: var(--bg-surface);
     border-right: 1px solid var(--border-light);
     box-shadow: none;
-
-    // Smooth width transition if we ever do mini-sidenav
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
   }
 
   mat-nav-list {
-    padding-top: 24px;
+    padding-top: 16px;
+
+    .nav-section-title {
+      padding: 8px 24px 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary, #999);
+    }
 
     a {
-      margin: 6px 16px;
-      padding: 12px 16px !important;
-      border-radius: 12px;
+      margin: 2px 12px;
+      padding: 10px 16px !important;
+      border-radius: 10px;
       color: var(--text-secondary);
       font-family: var(--font-heading);
       font-weight: 500;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       transition: all 0.2s ease;
 
       &:hover {
@@ -102,17 +121,16 @@ mat-sidenav-container {
 
         mat-icon {
           color: var(--primary);
-          // Add a subtle glow
           filter: drop-shadow(0 0 8px rgba(67, 56, 202, 0.3));
         }
       }
 
       mat-icon {
         color: var(--text-tertiary);
-        margin-right: 16px;
-        font-size: 22px;
-        width: 22px;
-        height: 22px;
+        margin-right: 14px;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
         display: flex;
         align-items: center;
         justify-content: center;

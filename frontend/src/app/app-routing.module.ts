@@ -25,6 +25,13 @@ import { ImpactStoryDetailComponent } from './components/impact-story-detail/imp
 import { DiscussionsComponent } from './components/discussions/discussions.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { VerifyEmailComponent } from './components/auth/verify-email/verify-email.component';
+// HeartBridge 2.0 Components
+import { VolunteerManagementComponent } from './components/volunteer-management/volunteer-management.component';
+import { BeneficiaryManagementComponent } from './components/beneficiary-management/beneficiary-management.component';
+import { InventoryManagementComponent } from './components/inventory-management/inventory-management.component';
+import { CsrPortalComponent } from './components/csr-portal/csr-portal.component';
+import { EmergencyIncidentsComponent } from './components/emergency-incidents/emergency-incidents.component';
+import { AiIntelligenceComponent } from './components/ai-intelligence/ai-intelligence.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -87,6 +94,40 @@ const routes: Routes = [
     component: AdminDonationsComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['system_admin'] }
+  },
+  // HeartBridge 2.0 Routes
+  {
+    path: 'volunteers',
+    component: VolunteerManagementComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'beneficiaries',
+    component: BeneficiaryManagementComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['ngo_admin', 'system_admin'] }
+  },
+  {
+    path: 'inventory',
+    component: InventoryManagementComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['ngo_admin', 'system_admin'] }
+  },
+  {
+    path: 'csr-portal',
+    component: CsrPortalComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'emergency-incidents',
+    component: EmergencyIncidentsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'ai-intelligence',
+    component: AiIntelligenceComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['ngo_admin', 'system_admin'] }
   }
 ];
 
@@ -95,4 +136,3 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-

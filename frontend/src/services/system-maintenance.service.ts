@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SystemMaintenanceService {
-  private baseUrl = 'http://localhost:3000/api/v1/system-maintenance';
+  private baseUrl = '/api/v1/system-maintenance';
 
   constructor(private http: HttpClient) {}
 
@@ -58,3 +58,4 @@ export class SystemMaintenanceService {
     return this.http.get(`${this.baseUrl}/view-logs?${params.toString()}`);
   }
 }
+

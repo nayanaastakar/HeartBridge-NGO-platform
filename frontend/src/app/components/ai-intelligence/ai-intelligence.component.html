@@ -1,0 +1,165 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1><mat-icon>psychology</mat-icon> AI Intelligence Hub</h1>
+    <p class="subtitle">Powered by HeartBridge AI — Insights, Forecasts & Intelligent Assistance</p>
+  </div>
+
+  <mat-tab-group [(selectedIndex)]="activeTab" class="main-tabs">
+
+    <!-- NLP Assistant Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>chat</mat-icon>&nbsp;AI Assistant
+      </ng-template>
+      <div class="tab-content chat-container">
+        <div class="chat-messages" #chatBox>
+          <div *ngFor="let msg of chatMessages" class="message" [class]="'message-' + msg.role">
+            <div class="message-bubble">
+              <mat-icon class="msg-icon">{{ msg.role === 'assistant' ? 'smart_toy' : 'person' }}</mat-icon>
+              <div class="msg-body">
+                <p>{{ msg.content }}</p>
+                <span class="msg-time">{{ msg.time | date:'shortTime' }}</span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="loading.chat" class="message message-assistant">
+            <div class="message-bubble">
+              <mat-icon class="msg-icon">smart_toy</mat-icon>
+              <div class="msg-body typing-indicator">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <form [formGroup]="chatForm" (ngSubmit)="sendMessage()" class="chat-form">
+            <mat-form-field appearance="outline" class="chat-input">
+              <mat-label>Ask anything about your NGO operations...</mat-label>
+              <input matInput formControlName="query" (keydown)="onKeyDown($event)"
+                placeholder="e.g., Which campaigns need attention? What is our donation trend?">
+            </mat-form-field>
+            <button mat-fab color="primary" type="submit" [disabled]="chatForm.invalid || loading.chat" class="send-btn">
+              <mat-icon>send</mat-icon>
+            </button>
+          </form>
+          <div class="quick-queries">
+            <span>Try: </span>
+            <button mat-stroked-button size="small" (click)="chatForm.patchValue({query: 'What is our donation trend?'}); sendMessage()">Donation trends</button>
+            <button mat-stroked-button size="small" (click)="chatForm.patchValue({query: 'Which campaigns are at risk?'}); sendMessage()">At-risk campaigns</button>
+            <button mat-stroked-button size="small" (click)="chatForm.patchValue({query: 'How can we improve volunteer engagement?'}); sendMessage()">Volunteer tips</button>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Donation Forecast Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>trending_up</mat-icon>&nbsp;Donation Forecast
+      </ng-template>
+      <div class="tab-content">
+        <div class="forecast-header">
+          <div class="forecast-desc">
+            <h2>AI-Powered Donation Forecast</h2>
+            <p>Machine learning predictions based on historical donation patterns, seasonal trends, and campaign performance.</p>
+          </div>
+          <button mat-raised-button color="primary" (click)="runForecast()" [disabled]="loading.forecast">
+            <mat-spinner *ngIf="loading.forecast" diameter="20"></mat-spinner>
+            <mat-icon *ngIf="!loading.forecast">model_training</mat-icon>
+            Run Forecast
+          </button>
+        </div>
+
+        <div *ngIf="!forecastData && !loading.forecast" class="empty-state">
+          <mat-icon>analytics</mat-icon>
+          <p>Click "Run Forecast" to generate AI-powered donation predictions.</p>
+        </div>
+
+        <div *ngIf="forecastData" class="forecast-results">
+          <canvas baseChart
+            [data]="forecastChartData"
+            [options]="forecastChartOptions"
+            type="line"
+            class="forecast-chart">
+          </canvas>
+
+          <div class="forecast-insights" *ngIf="forecastData.insights">
+            <h3>AI Insights</h3>
+            <mat-list>
+              <mat-list-item *ngFor="let insight of forecastData.insights">
+                <mat-icon matListItemIcon color="primary">lightbulb</mat-icon>
+                <span matListItemTitle>{{ insight }}</span>
+              </mat-list-item>
+            </mat-list>
+          </div>
+
+          <div class="forecast-summary" *ngIf="forecastData.summary">
+            <mat-card>
+              <mat-card-content>
+                <div class="summary-grid">
+                  <div class="summary-item">
+                    <span class="summary-label">Predicted Total (6 months)</span>
+                    <span class="summary-value">₹{{ forecastData.summary?.totalPredicted | number }}</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-label">Average Monthly</span>
+                    <span class="summary-value">₹{{ forecastData.summary?.avgMonthly | number }}</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-label">Model Confidence</span>
+                    <span class="summary-value">{{ forecastData.summary?.confidence || 'N/A' }}</span>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Anomaly Detection Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>security</mat-icon>&nbsp;Anomaly Detection
+      </ng-template>
+      <div class="tab-content">
+        <div class="anomaly-header">
+          <div>
+            <h2>Anomaly Detection</h2>
+            <p>Identify unusual patterns in donation behavior, campaign performance, and financial transactions.</p>
+          </div>
+          <button mat-raised-button color="accent" (click)="detectAnomalies()" [disabled]="loading.anomaly">
+            <mat-spinner *ngIf="loading.anomaly" diameter="20"></mat-spinner>
+            <mat-icon *ngIf="!loading.anomaly">search</mat-icon>
+            Scan for Anomalies
+          </button>
+        </div>
+
+        <div *ngIf="!anomalies.length && !loading.anomaly" class="empty-state">
+          <mat-icon color="primary">security</mat-icon>
+          <p>Run a scan to detect anomalies in your platform data.</p>
+        </div>
+
+        <div *ngIf="anomalies.length > 0" class="anomaly-results">
+          <mat-card *ngFor="let anomaly of anomalies" class="anomaly-card" [class]="'severity-' + anomaly.severity">
+            <mat-card-header>
+              <mat-icon mat-card-avatar [color]="getSeverityColor(anomaly.severity)">warning</mat-icon>
+              <mat-card-title>{{ anomaly.type | titlecase }}</mat-card-title>
+              <mat-card-subtitle>{{ anomaly.detectedAt | date:'medium' }}</mat-card-subtitle>
+              <mat-chip [color]="getSeverityColor(anomaly.severity)" selected class="severity-chip">
+                {{ anomaly.severity | titlecase }}
+              </mat-chip>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{ anomaly.description }}</p>
+              <div class="anomaly-details" *ngIf="anomaly.details">
+                <small>{{ anomaly.details | json }}</small>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -4,6 +4,7 @@
   </button>
   <div class="logo-badge" routerLink="/dashboard">
     <span>HeartBridge</span>
+    <span class="version-badge">2.0</span>
   </div>
   <span class="spacer"></span>
   <span class="tagline">Connecting Hearts Through Kindness</span>
@@ -36,6 +37,7 @@
         <span>My Profile</span>
       </a>
       <mat-divider></mat-divider>
+      <div class="nav-section-title">Community</div>
       <a mat-list-item routerLink="/marketplace" routerLinkActive="active">
         <mat-icon>store</mat-icon>
         <span>NGO Marketplace</span>
@@ -63,6 +65,34 @@
       <a mat-list-item routerLink="/gratitude-wall" routerLinkActive="active">
         <mat-icon>favorite</mat-icon>
         <span>Gratitude Wall</span>
+      </a>
+      <mat-divider></mat-divider>
+      <div class="nav-section-title">Operations</div>
+      <a mat-list-item routerLink="/volunteers" routerLinkActive="active">
+        <mat-icon>volunteer_activism</mat-icon>
+        <span>Volunteers</span>
+      </a>
+      <a mat-list-item routerLink="/beneficiaries" routerLinkActive="active">
+        <mat-icon>people</mat-icon>
+        <span>Beneficiaries</span>
+      </a>
+      <a mat-list-item routerLink="/inventory" routerLinkActive="active">
+        <mat-icon>inventory_2</mat-icon>
+        <span>Inventory</span>
+      </a>
+      <a mat-list-item routerLink="/emergency-incidents" routerLinkActive="active">
+        <mat-icon>crisis_alert</mat-icon>
+        <span>Emergency Incidents</span>
+      </a>
+      <mat-divider></mat-divider>
+      <div class="nav-section-title">Intelligence</div>
+      <a mat-list-item routerLink="/csr-portal" routerLinkActive="active">
+        <mat-icon>business</mat-icon>
+        <span>CSR & Grants</span>
+      </a>
+      <a mat-list-item routerLink="/ai-intelligence" routerLinkActive="active">
+        <mat-icon>psychology</mat-icon>
+        <span>AI Intelligence</span>
       </a>
     </mat-nav-list>
   </mat-sidenav>
