@@ -748,57 +748,75 @@ async function seedData() {
     }
   ]);
 
-  // 7. Wishes
+  // 7. Wishes (6 active community & facility wishes)
   console.log('Seeding wishes...');
   await db.collection('wishes').deleteMany({});
   await db.collection('wishes').insertMany([
     {
       ngoId: sampleNgo._id,
       title: 'Winter Warmth: 200 Sweaters for Slum School Children',
-      description: 'With temperatures dropping, over 200 primary school students attend morning classes without adequate warm clothing.',
-      category: 'Clothing',
-      targetAmount: 50000,
+      description: 'With temperatures dropping, over 200 primary school children attend morning classes without adequate warm clothing. Help us provide insulated woolen sweaters and caps.',
+      occasion: 'Winter Relief Drive',
+      requiredAmount: 50000,
       collectedAmount: 37500,
-      urgency: 'high',
-      isFulfilled: false,
-      donorCount: 18,
+      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      status: 'ACTIVE',
       createdAt: new Date(Date.now() - 3600000 * 48)
     },
     {
       ngoId: sampleNgo2._id,
       title: 'Braille Textbooks & Audio Players for Blind Students',
       description: 'Provide 35 visually impaired high school students with specialized tactile textbooks and digital talking books for state board exams.',
-      category: 'Education',
-      targetAmount: 75000,
-      collectedAmount: 62000,
-      urgency: 'critical',
-      isFulfilled: false,
-      donorCount: 29,
+      occasion: 'World Braille Celebration',
+      requiredAmount: 75000,
+      collectedAmount: 52000,
+      deadline: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000),
+      status: 'ACTIVE',
       createdAt: new Date(Date.now() - 3600000 * 96)
     },
     {
       ngoId: sampleNgo._id,
-      title: 'Emergency Dialysis Sessions for Mr. Harish Chandra',
-      description: 'Cover 12 life-saving hemodialysis cycles for a 45-year-old auto driver awaiting kidney donor matching.',
-      category: 'Medical',
-      targetAmount: 36000,
-      collectedAmount: 28000,
-      urgency: 'critical',
-      isFulfilled: false,
-      donorCount: 14,
+      title: 'Emergency Dialysis Sessions for Amit Kumar',
+      description: 'Cover 12 vital hemodialysis cycles for Amit, a 42-year-old auto driver awaiting kidney donor matching.',
+      occasion: 'Personal Critical Need',
+      requiredAmount: 36000,
+      collectedAmount: 26000,
+      deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+      status: 'ACTIVE',
       createdAt: new Date(Date.now() - 3600000 * 24)
     },
     {
       ngoId: sampleNgo2._id,
-      title: 'Solar Inverter for Animal Shelter Veterinary Clinic',
-      description: 'Frequent load shedding in rural outskirts disrupts emergency surgeries for rescued street animals. Need 3kVA solar backup.',
-      category: 'Equipment',
-      targetAmount: 85000,
-      collectedAmount: 42000,
-      urgency: 'medium',
-      isFulfilled: false,
-      donorCount: 21,
+      title: 'Solar Inverter for Senior Care Facility & Clinic',
+      description: 'Frequent load shedding in rural outskirts disrupts oxygen concentrators and night care for rescued elderly residents.',
+      occasion: 'NGO Common Facility Upgrade',
+      requiredAmount: 85000,
+      collectedAmount: 48000,
+      deadline: new Date(Date.now() + 75 * 24 * 60 * 60 * 1000),
+      status: 'ACTIVE',
       createdAt: new Date(Date.now() - 3600000 * 120)
+    },
+    {
+      ngoId: sampleNgo._id,
+      title: 'Nutrition & Fortified Milk Kits for 50 Malnourished Toddlers',
+      description: 'Provide comprehensive 60-day pediatric nutrition kits with micronutrient powder, clean formula milk, and high-protein porridge.',
+      occasion: 'Child Nutrition Week',
+      requiredAmount: 42000,
+      collectedAmount: 18500,
+      deadline: new Date(Date.now() + 40 * 24 * 60 * 60 * 1000),
+      status: 'ACTIVE',
+      createdAt: new Date(Date.now() - 3600000 * 12)
+    },
+    {
+      ngoId: sampleNgo2._id,
+      title: 'Wheelchairs & Lightweight Mobility Walkers for Senior Residents',
+      description: 'Gift freedom of movement to 15 frail residents living with severe arthritis through ergonomic foldable wheelchairs and walking frames.',
+      occasion: 'International Elders Day',
+      requiredAmount: 60000,
+      collectedAmount: 32000,
+      deadline: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      status: 'ACTIVE',
+      createdAt: new Date(Date.now() - 3600000 * 60)
     }
   ]);
 
