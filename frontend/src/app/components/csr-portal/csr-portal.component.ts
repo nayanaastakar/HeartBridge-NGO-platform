@@ -38,60 +38,58 @@ export class CsrPortalComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.corporateForm = this.fb.group({
-      companyName: ['', Validators.required],
-      sector: ['', Validators.required],
+      name: ['', Validators.required],
+      industry: ['', Validators.required],
       website: [''],
-      csrBudget: [0, Validators.min(0)],
-      contactPerson: ['', Validators.required],
-      contactEmail: ['', [Validators.required, Validators.email]],
+      annualCsrBudget: [0, Validators.min(0)],
+      phone: [''],
+      email: ['', [Validators.required, Validators.email]],
       description: ['']
     });
 
     this.grantForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      totalAmount: [0, [Validators.required, Validators.min(1)]],
-      eligibleSectors: [[]],
-      deadline: ['', Validators.required],
-      maxApplicants: [10],
-      requirements: ['']
+      totalFunding: [0, [Validators.required, Validators.min(1)]],
+      focusAreas: [[]],
+      applicationDeadline: ['', Validators.required],
+      maxApplications: [10],
+      eligibilityCriteria: ['']
     });
 
     this.applyForm = this.fb.group({
-      proposalTitle: ['', Validators.required],
-      proposalDescription: ['', Validators.required],
+      projectTitle: ['', Validators.required],
+      projectDescription: ['', Validators.required],
       requestedAmount: [0, [Validators.required, Validators.min(1)]],
-      expectedImpact: ['', Validators.required],
-      timeline: ['6 months']
+      expectedOutcomes: ['', Validators.required],
+      projectDurationMonths: [6]
     });
   }
 
   ngOnInit(): void {
     const user = this.authService.getCurrentUser();
-    this.isNgoAdmin = user?.role === 'ngo_admin';
+    this.isNgoAdmin = user?.role === 'ngo_admin' || user?.role === 'system_admin';
     this.isCorporate = user?.role === 'corporate';
     this.loadData();
   }
 
   loadData(): void {
     this.loading = true;
-    this.csrService.getGrants({ status: 'open' }).subscribe({
+    this.csrService.getGrants().subscribe({
       next: (res) => {
-        this.grants = res.grants || res || [];
+        this.grants = res.data || res.grants || res || [];
         this.loading = false;
       },
       error: () => { this.loading = false; }
     });
 
-    if (this.isNgoAdmin) {
-      this.csrService.getMyApplications().subscribe({
-        next: (res) => { this.myApplications = res.applications || res || []; },
-        error: () => {}
-      });
-    }
+    this.csrService.getMyApplications().subscribe({
+      next: (res) => { this.myApplications = res.data || res.applications || res || []; },
+      error: () => {}
+    });
 
     this.csrService.getMyCorporate().subscribe({
-      next: (res) => { this.myCorporate = res.corporate || res; },
+      next: (res) => { this.myCorporate = res.data || res.corporate || res; },
       error: () => {}
     });
   }
@@ -100,7 +98,7 @@ export class CsrPortalComponent implements OnInit {
     if (this.corporateForm.invalid) return;
     this.csrService.registerCorporate(this.corporateForm.value).subscribe({
       next: (res) => {
-        this.myCorporate = res.corporate || res;
+        this.myCorporate = res.data || res.corporate || res;
         this.showCorporateForm = false;
         this.snackBar.open('Corporate profile created!', 'Close', { duration: 3000 });
       },
@@ -113,7 +111,7 @@ export class CsrPortalComponent implements OnInit {
     this.csrService.createGrant(this.grantForm.value).subscribe({
       next: () => {
         this.showGrantForm = false;
-        this.grantForm.reset({ maxApplicants: 10, eligibleSectors: [] });
+        this.grantForm.reset({ maxApplications: 10, focusAreas: [] });
         this.snackBar.open('Grant created!', 'Close', { duration: 3000 });
         this.loadData();
       },
@@ -132,7 +130,7 @@ export class CsrPortalComponent implements OnInit {
       next: () => {
         this.showApplyForm = false;
         this.selectedGrant = null;
-        this.applyForm.reset({ timeline: '6 months' });
+        this.applyForm.reset({ projectDurationMonths: 6 });
         this.snackBar.open('Application submitted!', 'Close', { duration: 3000 });
         this.loadData();
       },
@@ -141,7 +139,7 @@ export class CsrPortalComponent implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    const c: any = { approved: 'primary', pending: 'accent', rejected: 'warn', open: 'primary', closed: 'warn' };
+    const c: any = { approved: 'primary', pending: 'accent', under_review: 'accent', rejected: 'warn', open: 'primary', closed: 'warn' };
     return c[status] || 'primary';
   }
 }

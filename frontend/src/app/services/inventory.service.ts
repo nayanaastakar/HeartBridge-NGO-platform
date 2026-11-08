@@ -24,16 +24,12 @@ export class InventoryService {
     return this.http.post(this.baseUrl, data);
   }
 
-  updateItem(id: string, data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/${id}`, data);
-  }
-
-  addTransaction(itemId: string, data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/${itemId}/transactions`, data);
+  updateStock(itemId: string, data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${itemId}/stock`, data);
   }
 
   getLowStock(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/alerts/low-stock`);
+    return this.http.get(`${this.baseUrl}/alerts`);
   }
 
   getTransactions(itemId: string): Observable<any> {

@@ -36,23 +36,23 @@ export class BeneficiaryManagementComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.beneficiaryForm = this.fb.group({
-      name: ['', Validators.required],
-      age: ['', [Validators.required, Validators.min(0)]],
-      gender: ['', Validators.required],
-      location: this.fb.group({
-        address: [''],
-        city: [''],
-        state: ['']
-      }),
-      contactNumber: [''],
+      fullName: ['', Validators.required],
+      dateOfBirth: [''],
+      gender: ['female', Validators.required],
+      address: [''],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      phone: [''],
       needs: [''],
-      vulnerabilityScore: [5, [Validators.min(1), Validators.max(10)]]
+      householdIncome: ['5000_15000'],
+      consentGiven: [true, Validators.requiredTrue]
     });
 
     this.caseForm = this.fb.group({
       beneficiaryId: ['', Validators.required],
-      type: ['', Validators.required],
+      type: ['medical', Validators.required],
       priority: ['medium'],
+      title: ['', Validators.required],
       description: ['', Validators.required],
       assistanceRequired: [''],
       estimatedCost: [0]
@@ -67,14 +67,16 @@ export class BeneficiaryManagementComponent implements OnInit {
     this.loading = true;
     this.beneficiaryService.getBeneficiaries().subscribe({
       next: (res) => {
-        this.beneficiaries = res.beneficiaries || res || [];
+        this.beneficiaries = res.data || res.beneficiaries || res || [];
         this.loading = false;
       },
       error: () => { this.loading = false; }
     });
 
     this.beneficiaryService.getCases().subscribe({
-      next: (res) => { this.cases = res.cases || res || []; },
+      next: (res) => {
+        this.cases = res.data || res.cases || res || [];
+      },
       error: () => {}
     });
   }
@@ -84,8 +86,8 @@ export class BeneficiaryManagementComponent implements OnInit {
     this.beneficiaryService.createBeneficiary(this.beneficiaryForm.value).subscribe({
       next: () => {
         this.showBeneficiaryForm = false;
-        this.beneficiaryForm.reset({ vulnerabilityScore: 5 });
-        this.snackBar.open('Beneficiary registered!', 'Close', { duration: 3000 });
+        this.beneficiaryForm.reset({ gender: 'female', consentGiven: true, householdIncome: '5000_15000' });
+        this.snackBar.open('Beneficiary registered successfully!', 'Close', { duration: 3000 });
         this.loadData();
       },
       error: (err) => this.snackBar.open(err?.error?.message || 'Failed', 'Close', { duration: 3000 })
@@ -97,8 +99,8 @@ export class BeneficiaryManagementComponent implements OnInit {
     this.beneficiaryService.createCase(this.caseForm.value).subscribe({
       next: () => {
         this.showCaseForm = false;
-        this.caseForm.reset({ priority: 'medium', estimatedCost: 0 });
-        this.snackBar.open('Case created!', 'Close', { duration: 3000 });
+        this.caseForm.reset({ priority: 'medium', estimatedCost: 0, type: 'medical' });
+        this.snackBar.open('Case created successfully!', 'Close', { duration: 3000 });
         this.loadData();
       },
       error: (err) => this.snackBar.open(err?.error?.message || 'Failed', 'Close', { duration: 3000 })

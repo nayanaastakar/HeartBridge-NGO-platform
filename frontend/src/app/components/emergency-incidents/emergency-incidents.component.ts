@@ -22,9 +22,9 @@ export class EmergencyIncidentsComponent implements OnInit {
 
   incidentColumns = ['title', 'type', 'severity', 'location', 'affectedPeople', 'status', 'actions'];
 
-  typeOptions = ['flood', 'earthquake', 'drought', 'epidemic', 'conflict', 'fire', 'other'];
+  typeOptions = ['flood', 'earthquake', 'drought', 'cyclone', 'fire', 'epidemic', 'other'];
   severityOptions = ['low', 'medium', 'high', 'critical'];
-  statusOptions = ['active', 'monitoring', 'resolved', 'closed'];
+  statusOptions = ['reported', 'active', 'contained', 'resolved'];
 
   constructor(
     private fb: FormBuilder,
@@ -34,19 +34,12 @@ export class EmergencyIncidentsComponent implements OnInit {
   ) {
     this.incidentForm = this.fb.group({
       title: ['', Validators.required],
-      type: ['', Validators.required],
-      severity: ['medium'],
+      category: ['flood', Validators.required],
+      severity: ['high'],
       description: ['', Validators.required],
-      location: this.fb.group({
-        address: [''],
-        city: ['', Validators.required],
-        state: ['', Validators.required],
-        country: ['India']
-      }),
-      affectedPeople: [0, Validators.min(0)],
-      resourcesNeeded: [''],
-      contactPerson: [''],
-      contactPhone: ['']
+      affectedArea: ['', Validators.required],
+      state: ['', Validators.required],
+      estimatedAffected: [0, Validators.min(0)]
     });
 
     this.updateForm = this.fb.group({
@@ -65,7 +58,7 @@ export class EmergencyIncidentsComponent implements OnInit {
     this.loading = true;
     this.incidentService.getIncidents().subscribe({
       next: (res) => {
-        this.incidents = res.incidents || res || [];
+        this.incidents = res.data || res.incidents || res || [];
         this.loading = false;
       },
       error: () => { this.loading = false; }
@@ -77,7 +70,7 @@ export class EmergencyIncidentsComponent implements OnInit {
     this.incidentService.createIncident(this.incidentForm.value).subscribe({
       next: () => {
         this.showCreateForm = false;
-        this.incidentForm.reset({ severity: 'medium', affectedPeople: 0 });
+        this.incidentForm.reset({ severity: 'high', category: 'flood', estimatedAffected: 0 });
         this.snackBar.open('Incident reported!', 'Close', { duration: 3000 });
         this.loadIncidents();
       },
@@ -97,7 +90,7 @@ export class EmergencyIncidentsComponent implements OnInit {
         this.updateForm.reset();
         this.snackBar.open('Update posted!', 'Close', { duration: 3000 });
         this.incidentService.getIncident(this.selectedIncident._id).subscribe({
-          next: (res) => { this.selectedIncident = res.incident || res; }
+          next: (res) => { this.selectedIncident = res.data || res.incident || res; }
         });
       },
       error: (err) => this.snackBar.open(err?.error?.message || 'Failed', 'Close', { duration: 3000 })
@@ -110,7 +103,7 @@ export class EmergencyIncidentsComponent implements OnInit {
   }
 
   getStatusClass(status: string): string {
-    const c: any = { active: 'status-active', monitoring: 'status-monitoring', resolved: 'status-resolved', closed: 'status-closed' };
+    const c: any = { active: 'status-active', reported: 'status-monitoring', contained: 'status-resolved', resolved: 'status-closed' };
     return c[status] || '';
   }
 }

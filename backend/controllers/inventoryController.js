@@ -22,7 +22,10 @@ const addItem = asyncHandler(async (req, res) => {
 
 const listItems = asyncHandler(async (req, res) => {
   const { category, status, page = 1, limit = 20 } = req.query;
-  const filter = { ngo: req.user.ngoId };
+  const filter = {};
+  if (req.user.role === 'ngo_admin' && req.user.ngoId) {
+    filter.ngo = req.user.ngoId;
+  }
   if (category) filter.category = category;
   if (status) filter.status = status;
 

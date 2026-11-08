@@ -13,11 +13,11 @@ export class VolunteerService {
   }
 
   getMyProfile(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/profile/me`);
+    return this.http.get(`${this.baseUrl}/profile`);
   }
 
   updateProfile(data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/profile/me`, data);
+    return this.http.put(`${this.baseUrl}/profile`, data);
   }
 
   getTasks(params?: any): Observable<any> {
@@ -41,11 +41,14 @@ export class VolunteerService {
   }
 
   logHours(taskId: string, hours: number, notes: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/tasks/${taskId}/log-hours`, { hours, notes });
+    return this.http.post(`${this.baseUrl}/tasks/${taskId}/attendance`, { hoursLogged: hours, notes });
   }
 
-  getVolunteers(ngoId?: string): Observable<any> {
-    const params = ngoId ? new HttpParams().set('ngoId', ngoId) : {};
-    return this.http.get(`${this.baseUrl}`, { params });
+  getVolunteers(params?: any): Observable<any> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(k => { if (params[k]) httpParams = httpParams.set(k, params[k]); });
+    }
+    return this.http.get(`${this.baseUrl}`, { params: httpParams });
   }
 }

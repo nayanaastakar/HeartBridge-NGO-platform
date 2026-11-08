@@ -74,24 +74,26 @@ export class VolunteerManagementComponent implements OnInit {
     this.loading = true;
     this.volunteerService.getTasks().subscribe({
       next: (res) => {
-        this.tasks = res.tasks || res || [];
+        this.tasks = res.data || res.tasks || res || [];
         this.loading = false;
       },
       error: () => { this.loading = false; }
     });
 
+    this.volunteerService.getVolunteers().subscribe({
+      next: (res) => {
+        this.volunteers = res.data || res.volunteers || res || [];
+      },
+      error: () => {}
+    });
+
     if (!this.isNgoAdmin) {
       this.volunteerService.getMyProfile().subscribe({
         next: (res) => {
-          this.myProfile = res.volunteer || res;
+          this.myProfile = res.data || res.volunteer || res;
           this.isRegistered = !!this.myProfile;
         },
         error: () => { this.isRegistered = false; }
-      });
-    } else {
-      this.volunteerService.getVolunteers().subscribe({
-        next: (res) => { this.volunteers = res.volunteers || res || []; },
-        error: () => {}
       });
     }
   }
@@ -100,10 +102,11 @@ export class VolunteerManagementComponent implements OnInit {
     if (this.registerForm.invalid) return;
     this.volunteerService.registerVolunteer(this.registerForm.value).subscribe({
       next: (res) => {
-        this.myProfile = res.volunteer || res;
+        this.myProfile = res.data || res.volunteer || res;
         this.isRegistered = true;
         this.showRegisterForm = false;
         this.snackBar.open('Successfully registered as volunteer!', 'Close', { duration: 3000 });
+        this.loadData();
       },
       error: (err) => {
         this.snackBar.open(err?.error?.message || 'Registration failed', 'Close', { duration: 3000 });

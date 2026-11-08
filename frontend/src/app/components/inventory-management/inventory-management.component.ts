@@ -26,7 +26,7 @@ export class InventoryManagementComponent implements OnInit {
 
   categoryOptions = ['food', 'medicine', 'clothing', 'shelter', 'hygiene', 'education', 'tools', 'electronics', 'other'];
   conditionOptions = ['new', 'good', 'fair', 'poor'];
-  txTypeOptions = ['received', 'distributed', 'damaged', 'returned', 'adjustment'];
+  txTypeOptions = ['stock_in', 'stock_out', 'adjustment', 'expired'];
 
   constructor(
     private fb: FormBuilder,
@@ -35,21 +35,19 @@ export class InventoryManagementComponent implements OnInit {
   ) {
     this.itemForm = this.fb.group({
       name: ['', Validators.required],
-      category: ['', Validators.required],
-      quantity: [0, [Validators.required, Validators.min(0)]],
-      unit: ['pieces'],
-      condition: ['good'],
+      category: ['food', Validators.required],
+      currentStock: [0, [Validators.required, Validators.min(0)]],
+      unit: ['units'],
       location: ['Warehouse'],
-      minimumStockLevel: [10],
-      description: [''],
+      minimumStock: [10],
+      batchNumber: [''],
       expiryDate: ['']
     });
 
     this.transactionForm = this.fb.group({
-      type: ['received', Validators.required],
+      type: ['stock_in', Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
-      notes: [''],
-      recipient: ['']
+      notes: ['']
     });
   }
 
@@ -61,15 +59,11 @@ export class InventoryManagementComponent implements OnInit {
     this.loading = true;
     this.inventoryService.getItems().subscribe({
       next: (res) => {
-        this.items = res.items || res || [];
+        this.items = res.data || res.items || res || [];
+        this.lowStockItems = this.items.filter(i => (i.currentStock || i.quantity || 0) <= (i.minimumStock || 10));
         this.loading = false;
       },
       error: () => { this.loading = false; }
-    });
-
-    this.inventoryService.getLowStock().subscribe({
-      next: (res) => { this.lowStockItems = res.items || res || []; },
-      error: () => {}
     });
   }
 
@@ -78,7 +72,7 @@ export class InventoryManagementComponent implements OnInit {
     this.inventoryService.createItem(this.itemForm.value).subscribe({
       next: () => {
         this.showItemForm = false;
-        this.itemForm.reset({ quantity: 0, unit: 'pieces', condition: 'good', minimumStockLevel: 10 });
+        this.itemForm.reset({ currentStock: 0, unit: 'units', minimumStock: 10, category: 'food' });
         this.snackBar.open('Item added to inventory!', 'Close', { duration: 3000 });
         this.loadData();
       },
@@ -93,12 +87,12 @@ export class InventoryManagementComponent implements OnInit {
 
   addTransaction(): void {
     if (!this.selectedItem || this.transactionForm.invalid) return;
-    this.inventoryService.addTransaction(this.selectedItem._id, this.transactionForm.value).subscribe({
+    this.inventoryService.updateStock(this.selectedItem._id, this.transactionForm.value).subscribe({
       next: () => {
         this.showTransactionForm = false;
         this.selectedItem = null;
-        this.transactionForm.reset({ type: 'received', quantity: 1 });
-        this.snackBar.open('Transaction recorded!', 'Close', { duration: 3000 });
+        this.transactionForm.reset({ type: 'stock_in', quantity: 1 });
+        this.snackBar.open('Stock updated!', 'Close', { duration: 3000 });
         this.loadData();
       },
       error: (err) => this.snackBar.open(err?.error?.message || 'Failed', 'Close', { duration: 3000 })
@@ -108,14 +102,19 @@ export class InventoryManagementComponent implements OnInit {
   viewTransactions(item: any): void {
     this.selectedItem = item;
     this.inventoryService.getTransactions(item._id).subscribe({
-      next: (res) => { this.transactions = res.transactions || res || []; this.activeTab = 2; },
+      next: (res) => {
+        this.transactions = res.data || res.transactions || res || [];
+        this.activeTab = 2;
+      },
       error: () => {}
     });
   }
 
   getStockClass(item: any): string {
-    if (item.quantity === 0) return 'out-of-stock';
-    if (item.quantity <= (item.minimumStockLevel || 10)) return 'low-stock';
+    const qty = item.currentStock !== undefined ? item.currentStock : item.quantity;
+    const min = item.minimumStock !== undefined ? item.minimumStock : item.minimumStockLevel;
+    if (qty === 0) return 'out-of-stock';
+    if (qty <= (min || 10)) return 'low-stock';
     return 'in-stock';
   }
 }

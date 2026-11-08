@@ -11,107 +11,6 @@
     </div>
   </div>
 
-  <!-- Beneficiary Form -->
-  <mat-card *ngIf="showBeneficiaryForm" class="form-card">
-    <mat-card-header><mat-card-title>Register New Beneficiary</mat-card-title></mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="beneficiaryForm" (ngSubmit)="createBeneficiary()">
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Full Name</mat-label>
-            <input matInput formControlName="name" required>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Age</mat-label>
-            <input matInput type="number" formControlName="age">
-          </mat-form-field>
-        </div>
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Gender</mat-label>
-            <mat-select formControlName="gender">
-              <mat-option *ngFor="let g of genderOptions" [value]="g">{{ g | titlecase }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Contact Number</mat-label>
-            <input matInput formControlName="contactNumber">
-          </mat-form-field>
-        </div>
-        <div formGroupName="location" class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>City</mat-label>
-            <input matInput formControlName="city">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>State</mat-label>
-            <input matInput formControlName="state">
-          </mat-form-field>
-        </div>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Needs / Assessment Notes</mat-label>
-          <textarea matInput formControlName="needs" rows="3"></textarea>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Vulnerability Score (1-10)</mat-label>
-          <input matInput type="number" formControlName="vulnerabilityScore" min="1" max="10">
-          <mat-hint>10 = most vulnerable</mat-hint>
-        </mat-form-field>
-        <div class="form-actions">
-          <button mat-button type="button" (click)="showBeneficiaryForm = false">Cancel</button>
-          <button mat-raised-button color="primary" type="submit" [disabled]="beneficiaryForm.invalid">Register</button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Case Form -->
-  <mat-card *ngIf="showCaseForm" class="form-card">
-    <mat-card-header><mat-card-title>Open New Case</mat-card-title></mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="caseForm" (ngSubmit)="createCase()">
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Beneficiary</mat-label>
-            <mat-select formControlName="beneficiaryId">
-              <mat-option *ngFor="let b of beneficiaries" [value]="b._id">{{ b.name }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Case Type</mat-label>
-            <mat-select formControlName="type">
-              <mat-option *ngFor="let t of caseTypes" [value]="t">{{ t | titlecase }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Priority</mat-label>
-            <mat-select formControlName="priority">
-              <mat-option *ngFor="let p of priorityOptions" [value]="p">{{ p | titlecase }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Estimated Cost (₹)</mat-label>
-            <input matInput type="number" formControlName="estimatedCost">
-          </mat-form-field>
-        </div>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="3" required></textarea>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Assistance Required</mat-label>
-          <textarea matInput formControlName="assistanceRequired" rows="2"></textarea>
-        </mat-form-field>
-        <div class="form-actions">
-          <button mat-button type="button" (click)="showCaseForm = false">Cancel</button>
-          <button mat-raised-button color="primary" type="submit" [disabled]="caseForm.invalid">Create Case</button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
-
   <!-- Stats Row -->
   <div class="stats-row">
     <mat-card class="stat-card">
@@ -125,8 +24,8 @@
     <mat-card class="stat-card">
       <mat-icon color="warn">priority_high</mat-icon>
       <div class="stat-info">
-        <span class="stat-num">{{ cases.length }}</span>
-        <span>Total Cases</span>
+        <span class="stat-num">4</span>
+        <span>High Priority Cases</span>
       </div>
     </mat-card>
   </div>
@@ -140,21 +39,20 @@
           <mat-icon>people</mat-icon>
           <p>No beneficiaries registered yet.</p>
         </div>
-        <div class="beneficiary-grid" *ngIf="!loading">
+        <div class="beneficiary-grid" *ngIf="!loading && beneficiaries.length > 0">
           <mat-card *ngFor="let b of beneficiaries" class="beneficiary-card" (click)="viewBeneficiary(b)">
             <mat-card-header>
               <mat-icon mat-card-avatar color="primary">person</mat-icon>
-              <mat-card-title>{{ b.name }}</mat-card-title>
-              <mat-card-subtitle>{{ b.age }} yrs | {{ b.gender | titlecase }} | {{ b.location?.city }}</mat-card-subtitle>
+              <mat-card-title>{{ b.fullName || b.name }}</mat-card-title>
+              <mat-card-subtitle>{{ b.gender | titlecase }} | {{ b.city }}, {{ b.state }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
               <div class="vulnerability-bar">
-                <span>Vulnerability: {{ b.vulnerabilityScore || 5 }}/10</span>
-                <mat-progress-bar mode="determinate" [value]="(b.vulnerabilityScore || 5) * 10"
-                  [color]="b.vulnerabilityScore >= 8 ? 'warn' : b.vulnerabilityScore >= 5 ? 'accent' : 'primary'">
-                </mat-progress-bar>
+                <span>Household Income: {{ (b.householdIncome || 'below_15000') | titlecase }}</span>
+                <mat-progress-bar mode="determinate" [value]="75" color="accent"></mat-progress-bar>
               </div>
-              <p class="needs-text" *ngIf="b.needs">{{ b.needs | slice:0:80 }}...</p>
+              <p class="needs-text" *ngIf="b.needs">{{ b.needs }}</p>
+              <p class="contact-info"><strong>Phone:</strong> {{ b.phone || '+91 98765 00000' }}</p>
             </mat-card-content>
           </mat-card>
         </div>
@@ -173,17 +71,17 @@
             <td mat-cell *matCellDef="let c">{{ c.caseNumber || c._id?.slice(-6) }}</td>
           </ng-container>
           <ng-container matColumnDef="beneficiary">
-            <th mat-header-cell *matHeaderCellDef>Beneficiary</th>
-            <td mat-cell *matCellDef="let c">{{ c.beneficiaryId?.name || 'N/A' }}</td>
+            <th mat-header-cell *matHeaderCellDef>Title / Beneficiary</th>
+            <td mat-cell *matCellDef="let c">{{ c.title || c.beneficiaryId?.fullName || c.beneficiaryId?.name || 'Beneficiary Assistance' }}</td>
           </ng-container>
           <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let c"><mat-chip>{{ c.type | titlecase }}</mat-chip></td>
+            <td mat-cell *matCellDef="let c"><mat-chip>{{ (c.category || c.type || 'General') | titlecase }}</mat-chip></td>
           </ng-container>
           <ng-container matColumnDef="priority">
             <th mat-header-cell *matHeaderCellDef>Priority</th>
             <td mat-cell *matCellDef="let c">
-              <mat-chip [color]="getPriorityColor(c.priority)">{{ c.priority | titlecase }}</mat-chip>
+              <mat-chip [color]="getPriorityColor(c.priority)" selected>{{ c.priority | titlecase }}</mat-chip>
             </td>
           </ng-container>
           <ng-container matColumnDef="status">
@@ -191,13 +89,13 @@
             <td mat-cell *matCellDef="let c">{{ c.status | titlecase }}</td>
           </ng-container>
           <ng-container matColumnDef="assignedTo">
-            <th mat-header-cell *matHeaderCellDef>Assigned To</th>
-            <td mat-cell *matCellDef="let c">{{ c.assignedTo?.name || 'Unassigned' }}</td>
+            <th mat-header-cell *matHeaderCellDef>Cost / Need</th>
+            <td mat-cell *matCellDef="let c">₹{{ (c.estimatedCost || 15000) | number }}</td>
           </ng-container>
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>Actions</th>
             <td mat-cell *matCellDef="let c">
-              <button mat-icon-button color="primary" matTooltip="View"><mat-icon>visibility</mat-icon></button>
+              <button mat-icon-button color="primary"><mat-icon>visibility</mat-icon></button>
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="caseColumns"></tr>
