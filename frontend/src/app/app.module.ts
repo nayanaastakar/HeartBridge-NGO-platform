@@ -76,7 +76,7 @@ import { SafePipe } from './pipes/safe.pipe';
 import { AddImpactStoryDialogComponent } from './components/add-impact-story-dialog/add-impact-story-dialog.component';
 import { AdminLoginComponent } from './components/auth/admin-login/admin-login.component';
 
-// New HeartBridge 2.0 Components
+// HeartBridge Enterprise Components
 import { VolunteerManagementComponent } from './components/volunteer-management/volunteer-management.component';
 import { BeneficiaryManagementComponent } from './components/beneficiary-management/beneficiary-management.component';
 import { InventoryManagementComponent } from './components/inventory-management/inventory-management.component';
@@ -135,7 +135,7 @@ import { AiService } from './services/ai.service';
     VerifyEmailComponent,
     SafePipe,
     AdminLoginComponent,
-    // HeartBridge 2.0
+    // HeartBridge Enterprise
     VolunteerManagementComponent,
     BeneficiaryManagementComponent,
     InventoryManagementComponent,

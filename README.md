@@ -1,4 +1,4 @@
-# HeartBridge 2.0: AI-Powered Social Impact & Humanitarian Ecosystem
+# HeartBridge: AI-Powered Social Impact & Humanitarian Ecosystem
 
 [![Build Status](https://github.com/nayanaastakar/HeartBridge-NGO-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/nayanaastakar/HeartBridge-NGO-platform/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -7,7 +7,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-teal.svg)](https://fastapi.tiangolo.com/)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-blue.svg)](https://www.docker.com/)
 
-**HeartBridge 2.0** is an enterprise-grade, comprehensive humanitarian management ecosystem designed to seamlessly connect NGOs, Donors, Beneficiaries, Corporate CSR departments, Volunteers, and Emergency Response teams. Built with a modern microservices architecture comprising an Angular frontend, an Express/Node.js core backend, a Python FastAPI Machine Learning microservice, and MongoDB.
+**HeartBridge** is an enterprise-grade, comprehensive humanitarian management ecosystem designed to seamlessly connect NGOs, Donors, Beneficiaries, Corporate CSR departments, Volunteers, and Emergency Response teams. Built with a modern microservices architecture comprising an Angular frontend, an Express/Node.js core backend, a Python FastAPI Machine Learning microservice, and MongoDB.
 
 ---
 

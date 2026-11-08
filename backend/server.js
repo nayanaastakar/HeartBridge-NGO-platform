@@ -56,7 +56,7 @@ app.use('/api/v1/analytics', require('./routes/analytics'));
 app.use('/api/v1/system-maintenance', require('./routes/systemMaintenance'));
 app.use('/api/v1/payments', require('./routes/payments'));
 
-// Routes -- HeartBridge 2.0 Enterprise Modules
+// Routes -- HeartBridge Enterprise Modules
 app.use('/api/v1/beneficiaries', require('./routes/beneficiaries'));
 app.use('/api/v1/volunteers', require('./routes/volunteers'));
 app.use('/api/v1/inventory', require('./routes/inventory'));
@@ -67,8 +67,8 @@ app.use('/api/v1/ai', require('./routes/ai'));
 // Root route
 app.get('/', (req, res) => {
   res.json({ 
-    message: 'Welcome to HeartBridge 2.0 API',
-    version: 'v2.0',
+    message: 'Welcome to HeartBridge API',
+    version: 'v1.0',
     health: '/api/v1/health',
     documentation: 'API endpoints available at /api/v1/*'
   });
@@ -76,7 +76,7 @@ app.get('/', (req, res) => {
 
 // Health check
 app.get('/api/v1/health', (req, res) => {
-  res.json({ status: 'OK', message: 'HeartBridge 2.0 API is running', timestamp: new Date().toISOString() });
+  res.json({ status: 'OK', message: 'HeartBridge API is running', timestamp: new Date().toISOString() });
 });
 
 // Error handler middleware (must be after all routes)
@@ -92,7 +92,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/heartbrid
     console.log('✅ MongoDB Connected');
     const PORT = process.env.PORT || 3001;
     app.listen(PORT, () => {
-      console.log(`🚀 HeartBridge 2.0 Server running on port ${PORT}`);
+      console.log(`🚀 HeartBridge Server running on port ${PORT}`);
     });
   })
   .catch((err) => {

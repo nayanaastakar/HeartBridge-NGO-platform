@@ -36,3 +36,6 @@ coverage/
 # Misc
 *.pem
 
+
+__pycache__/
+*.pyc

@@ -25,7 +25,7 @@ import { ImpactStoryDetailComponent } from './components/impact-story-detail/imp
 import { DiscussionsComponent } from './components/discussions/discussions.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { VerifyEmailComponent } from './components/auth/verify-email/verify-email.component';
-// HeartBridge 2.0 Components
+// HeartBridge Enterprise Components
 import { VolunteerManagementComponent } from './components/volunteer-management/volunteer-management.component';
 import { BeneficiaryManagementComponent } from './components/beneficiary-management/beneficiary-management.component';
 import { InventoryManagementComponent } from './components/inventory-management/inventory-management.component';
@@ -95,7 +95,7 @@ const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['system_admin'] }
   },
-  // HeartBridge 2.0 Routes
+  // HeartBridge Enterprise Routes
   {
     path: 'volunteers',
     component: VolunteerManagementComponent,

@@ -39,17 +39,6 @@ mat-toolbar {
       letter-spacing: -0.04em;
     }
 
-    .version-badge {
-      font-size: 0.65rem !important;
-      font-weight: 700 !important;
-      background: linear-gradient(135deg, #e91e8c, #9c27b0) !important;
-      -webkit-background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
-      letter-spacing: 0 !important;
-      vertical-align: super;
-      margin-left: -4px;
-    }
-
     &:hover {
       transform: scale(1.02);
     }

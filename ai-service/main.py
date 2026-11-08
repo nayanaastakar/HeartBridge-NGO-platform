@@ -1,5 +1,5 @@
 """
-HeartBridge 2.0 - Independent Python AI/ML Microservice
+HeartBridge - Independent Python AI/ML Microservice
 Provides predictive analytics, ML pipelines, NLP intelligence, and anomaly detection.
 """
 
@@ -14,7 +14,7 @@ from sklearn.ensemble import IsolationForest
 from datetime import datetime, timedelta
 
 app = FastAPI(
-    title="HeartBridge 2.0 AI Intelligence Engine",
+    title="HeartBridge AI Intelligence Engine",
     description="Machine Learning, Anomaly Detection & Predictive Analytics for Social Impact",
     version="2.0.0"
 )

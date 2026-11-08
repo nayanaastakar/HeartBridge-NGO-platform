@@ -1,4 +1,4 @@
-name: HeartBridge 2.0 CI/CD
+name: HeartBridge CI/CD
 
 on:
   push:
